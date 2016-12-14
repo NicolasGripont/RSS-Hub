@@ -7,6 +7,7 @@ public class Feed {
 	private String title;
 	private String url;
 	private String cacheFileName;
+	private String category;
 	private List<String> tags;
 
 	public Feed() {
@@ -14,15 +15,17 @@ public class Feed {
 		this.title = "";
 		this.url = "";
 		this.cacheFileName = "";
+		this.category = "";
 		this.tags = new ArrayList<>();
 	}
 
-	public Feed(final String title, final String url, final List<String> tags, final String cacheFileName) {
+	public Feed(final String title, final String url, final List<String> tags, final String category, final String cacheFileName) {
 		super();
 		this.title = title;
 		this.url = url;
-		this.tags = tags;
 		this.cacheFileName = cacheFileName;
+		this.category = category;
+		this.tags = tags;
 	}
 
 	public String getTitle() {
@@ -48,6 +51,10 @@ public class Feed {
 	public void setCacheFileName(final String cacheFileName) {
 		this.cacheFileName = cacheFileName;
 	}
+
+	public String getCategory() { return category; }
+
+	public void setCategory(String category) { this.category = category; }
 
 	public List<String> getTags() {
 		return this.tags;

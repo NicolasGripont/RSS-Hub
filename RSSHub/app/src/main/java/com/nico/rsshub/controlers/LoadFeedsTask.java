@@ -2,11 +2,9 @@ package com.nico.rsshub.controlers;
 
 import android.os.AsyncTask;
 
-import com.nico.rsshub.services.FeedParser;
-import com.nico.rsshub.views.MainActivity;
 import com.nico.rsshub.modeles.Feed;
 import com.nico.rsshub.modeles.Information;
-
+import com.nico.rsshub.services.FeedParser;
 
 import java.util.List;
 
@@ -16,11 +14,11 @@ import java.util.List;
 
 public class LoadFeedsTask extends AsyncTask<String, Integer, List<Information>> {
 
-    private MainActivity mainActivity = null;
+    private Controler controler = null;
 
-    public LoadFeedsTask(MainActivity mainActivity){
+    public LoadFeedsTask(Controler controler){
         super();
-        this.mainActivity = mainActivity;
+        this.controler = controler;
     }
 
     protected List<Information> doInBackground(String... urls) {
@@ -43,7 +41,7 @@ public class LoadFeedsTask extends AsyncTask<String, Integer, List<Information>>
     }
 
     protected void onPostExecute(List<Information> result) {
-        mainActivity.updateInformations(result);
+        controler.updateInformations(result);
     }
 
 

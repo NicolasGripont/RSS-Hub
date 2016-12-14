@@ -1,4 +1,12 @@
 <resources>
     <string name="app_name">RSS Hub</string>
-    <string name="title_activity_splash">SplashActivity</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="favorites">Favoris</string>
+    <string name="categories">Catégories</string>
+    <string name="feeds">Feeds</string>
+
 </resources>
