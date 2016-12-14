@@ -13,7 +13,6 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-
     static final int READ_BLOCK_SIZE = 100;
 
     private ListView listView = null;
