@@ -1,29 +1,35 @@
 package com.nico.rsshub.modeles;
 
-public class Information {
+import java.io.Serializable;
+import java.util.Date;
+
+public class Information implements Serializable {
 	private String title;
 	private String url;
 	private String description;
-	private String datePublication;
-	private String sourceName;
+	private Date datePublication;
+	private Feed feed;
+	private String image;
 
 	public Information() {
 		super();
 		this.title = "";
 		this.url = "";
 		this.description = "";
-		this.datePublication = "";
-		this.sourceName = "";
+		this.datePublication = null;
+		this.feed = null;
+		this.image = "";
 	}
 
-	public Information(final String title, final String url, final String description, final String datePublication,
-			final String sourceName) {
+	public Information(final String title, final String url, final String description, final Date datePublication,
+			final Feed feed, String image) {
 		super();
 		this.title = title;
 		this.url = url;
 		this.description = description;
 		this.datePublication = datePublication;
-		this.sourceName = sourceName;
+		this.feed = feed;
+		this.image = image;
 	}
 
 	public String getTitle() {
@@ -50,26 +56,30 @@ public class Information {
 		this.description = description;
 	}
 
-	public String getDatePublication() {
+	public Date getDatePublication() {
 		return this.datePublication;
 	}
 
-	public void setDatePublication(final String datePublication) {
+	public void setDatePublication(final Date datePublication) {
 		this.datePublication = datePublication;
 	}
 
-	public String getSourceName() {
-		return this.sourceName;
+	public Feed getFeed() {
+		return this.feed;
 	}
 
-	public void setSourceName(final String sourceName) {
-		this.sourceName = sourceName;
+	public void setFeed(final Feed feed) {
+		this.feed = feed;
 	}
+
+	public String getImage() { return image; }
+
+	public void setImage(String image) { this.image = image; }
 
 	@Override
 	public String toString() {
 		return "Information [title=" + this.title + ", url=" + this.url + ", description=" + this.description
-				+ ", datePublication=" + this.datePublication + ", sourceName=" + this.sourceName + "]";
+				+ ", datePublication=" + this.datePublication + ", feed=" + this.feed + "]";
 	}
 
 }

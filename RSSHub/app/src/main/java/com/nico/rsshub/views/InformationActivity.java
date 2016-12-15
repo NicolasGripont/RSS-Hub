@@ -10,19 +10,18 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SubMenu;
-import android.widget.ArrayAdapter;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.nico.rsshub.R;
-import com.nico.rsshub.controlers.Controler;
+import com.nico.rsshub.controllers.Controller;
 import com.nico.rsshub.modeles.Information;
 
 import java.util.List;
 
 public class InformationActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-
-    Controler controler;
 
     ListView listView;
 
@@ -62,13 +61,11 @@ public class InformationActivity extends AppCompatActivity
         this.feedsMenu  = m.addSubMenu(R.string.feeds);
         this.feedsMenu.add("tmp");
 
-
-
-        this.controler = new Controler(this);
+        Controller.getInstance().setCurrentActivity(this);
 
         this.listView = (ListView) findViewById(R.id.listView);
 
-        controler.loadInformations();
+        Controller.getInstance().loadInformations();
     }
 
     @Override
@@ -130,20 +127,18 @@ public class InformationActivity extends AppCompatActivity
 
 
 
-    public void updateInformations(List<Information> informations) {
-        String[] titles;
+    public void updateInformations(final List<Information> informations) {
         if(informations != null) {
-            titles = new String[informations.size()];
-            for(int i = 0; i < informations.size(); i++) {
-                titles[i] = informations.get(i).getTitle();
-            }
-        } else {
-            titles = new String[]{"Error !"};
-        }
+            InformationAdapter adapter = new InformationAdapter(this, informations);
+            listView.setAdapter(adapter);
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_list_item_1, titles);
-        listView.setAdapter(adapter);
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapter, View view, int position, long arg3) {
+                    Controller.getInstance().onInformationClick(adapter,position);
+                }
+            });
+        }
     }
 
 }

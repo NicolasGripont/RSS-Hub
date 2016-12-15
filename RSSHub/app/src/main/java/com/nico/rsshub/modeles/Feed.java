@@ -1,9 +1,10 @@
 package com.nico.rsshub.modeles;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Feed {
+public class Feed implements Serializable {
 	private String title;
 	private String url;
 	private String cacheFileName;
