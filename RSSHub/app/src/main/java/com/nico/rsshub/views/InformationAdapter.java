@@ -55,19 +55,19 @@ public class InformationAdapter extends BaseAdapter {
         }
 
         //(2) : Récupération des TextView de notre layout
+        TextView information_feed = (TextView)layoutItem.findViewById(R.id.information_feed);
+        TextView information_category = (TextView)layoutItem.findViewById(R.id.information_category);
         TextView information_title = (TextView)layoutItem.findViewById(R.id.information_title);
-        TextView information_url = (TextView)layoutItem.findViewById(R.id.information_url);
         TextView information_date = (TextView)layoutItem.findViewById(R.id.information_date);
-        TextView information_image = (TextView)layoutItem.findViewById(R.id.information_image);
 
         //(3) : Renseignement des valeurs
+        information_feed.setText("L'Equipe");
+        information_category.setText("Sport");
         information_title.setText(informationList.get(position).getTitle());
-        information_url.setText(informationList.get(position).getUrl());
         if(informationList.get(position).getDatePublication() != null) {
             DateFormat dateFormat = new SimpleDateFormat("dd/MM hh:mm", Locale.ENGLISH);
             information_date.setText(dateFormat.format(informationList.get(position).getDatePublication()));
         }
-        information_image.setText(informationList.get(position).getImage());
 
         //(4) Changement de la couleur du fond de notre item
 //        if (informationList.get(position).genre == Personne.MASCULIN) {
