@@ -1,11 +1,9 @@
 package com.nico.rsshub.controllers;
 
-import android.os.AsyncTask;
 import android.os.Environment;
 
 import com.nico.rsshub.modeles.Feed;
 import com.nico.rsshub.modeles.Information;
-import com.nico.rsshub.services.FeedParser;
 
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -23,6 +21,8 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -64,6 +64,23 @@ public class LoadFeedTask extends Thread {
         super.run();
         try {
             this.informationList = parseAFeed(this.feed);
+            if(this.informationList != null && !this.informationList.isEmpty()) {
+                Controller.getInstance().getMutexFeeds().acquire();
+                Collections.sort(this.informationList, new Comparator<Information>() {
+                    @Override
+                    public int compare(Information lhs, Information rhs) {
+                        if(lhs.getDatePublication().getTime() - rhs.getDatePublication().getTime() > 0) {
+                            return -1;
+                        } else if (lhs.getDatePublication().getTime() - rhs.getDatePublication().getTime() == 0) {
+                            return 0;
+                        }
+                        return 1;
+                    }
+                });
+                Controller.getInstance().getInformationList().addAll(this.informationList);
+                Controller.getInstance().getFeeds().put(feed,this.informationList);
+                Controller.getInstance().getMutexFeeds().release();
+            }
         } catch (Exception e) {
             this.informationList = null;
             System.out.println(e);
@@ -76,7 +93,7 @@ public class LoadFeedTask extends Thread {
                 if(downloadImageTask.getBitmap() != null) {
                     //TODO mutex
                     Controller.getInstance().getMutexImages().acquire();
-                    Controller.getInstance().getImages().put(downloadImageTask.getImageURL(),downloadImageTask.getBitmap());
+                    Controller.getInstance().getImages().put(downloadImageTask.getInformation(),downloadImageTask.getBitmap());
                     Controller.getInstance().getMutexImages().release();
                 }
             } catch (InterruptedException e) {
@@ -162,7 +179,7 @@ public class LoadFeedTask extends Thread {
 //                image
                 if(item.getChild("enclosure") != null && item.getChild("enclosure").getAttributeValue("type").contains("image")) {
                     information.setImage(item.getChild("enclosure").getAttributeValue("url"));
-                    DownloadImageTask downloadImageTask = new DownloadImageTask(information.getImage());
+                    DownloadImageTask downloadImageTask = new DownloadImageTask(information);
                     this.downloadImageTasks.add(downloadImageTask);
                     downloadImageTask.start();
                 } else {

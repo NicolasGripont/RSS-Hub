@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.nico.rsshub.R;
@@ -52,7 +53,7 @@ public class InformationAdapter extends BaseAdapter {
 
         //(1) : Réutilisation des layouts
         if (convertView == null) {
-            //Initialisation de notre item à partir du  layout XML "personne_layout.xml"
+            //Initialisation de notre item à partir du  layout XML "information_layout.xml"
             layoutItem = (LinearLayout) layoutInflater.inflate(R.layout.information_layout, parent, false);
         } else {
             layoutItem = (LinearLayout) convertView;
@@ -73,21 +74,22 @@ public class InformationAdapter extends BaseAdapter {
             DateFormat dateFormat = new SimpleDateFormat("dd/MM HH:mm", Locale.ENGLISH);
             information_date.setText(dateFormat.format(informationList.get(position).getDatePublication()));
         }
+
         if(this.informationList.get(position).getImage() != null && !this.informationList.get(position).getImage().equals("")) {
-            Bitmap image = Controller.getInstance().getImages().get(this.informationList.get(position).getImage());
+            Bitmap image = Controller.getInstance().getImages().get(this.informationList.get(position));
             if(image != null) {
                 try {
                     double ratio = (information_image.getWidth()*1.0) / (image.getWidth()*1.0);
                     Bitmap newBitmap = Bitmap.createScaledBitmap(image, (int) (image.getWidth() * ratio), (int) (image.getHeight() * ratio), false);
                     information_image.setImageBitmap(newBitmap);
                 } catch (Exception e){
-//                    layoutItem.removeView(information_image);
+                    information_image.setImageDrawable(null);
                 }
             } else {
-//                layoutItem.removeView(information_image);
+                information_image.setImageDrawable(null);
             }
         } else {
-//            layoutItem.removeView(information_image);
+            information_image.setImageDrawable(null);
         }
 
 

@@ -33,7 +33,7 @@ import java.util.Locale;
  * Created by Nico on 13/12/2016.
  */
 
-public class LoadFeedsTask extends AsyncTask<Feed, Integer, List<Information>> {
+public class LoadFeedsTask extends AsyncTask<Feed, Integer, String> {
 
     private long refreshTimeInMs;
 
@@ -54,8 +54,7 @@ public class LoadFeedsTask extends AsyncTask<Feed, Integer, List<Information>> {
 
     public void setRefreshTimeInMs(final long refreshTimeInMs) { this.refreshTimeInMs = refreshTimeInMs; }
 
-    protected List<Information> doInBackground(Feed... feeds) {
-        List<Information> informationList = null;
+    protected String doInBackground(Feed... feeds) {
 
         for(Feed feed : feeds) {
             try {
@@ -63,37 +62,33 @@ public class LoadFeedsTask extends AsyncTask<Feed, Integer, List<Information>> {
                 this.loadFeedTasks.add(loadFeedTask);
                 loadFeedTask.start();
             } catch (Exception e) {
-                informationList = null;
             }
         }
 
-        return informationList;
+        return null;
     }
 
-    protected void onPostExecute(List<Information> result) {
+    protected void onPostExecute(String result) {
         for(LoadFeedTask loadFeedTask : this.loadFeedTasks) {
             try {
                 loadFeedTask.join();
-                if(loadFeedTask.getInformationList() != null){
-                    this.informationList.addAll(loadFeedTask.getInformationList());
-                }
             } catch (InterruptedException e) {
             }
         }
 
-//        Collections.sort(this.informationList, new Comparator<Information>() {
-//            @Override
-//            public int compare(Information lhs, Information rhs) {
-//                if(lhs.getDatePublication().getTime() - rhs.getDatePublication().getTime() > 0) {
-//                    return -1;
-//                } else if (lhs.getDatePublication().getTime() - rhs.getDatePublication().getTime() == 0) {
-//                    return 0;
-//                }
-//                return 1;
-//            }
-//        });
-        if(this.informationList.size() != 0) {
-            Controller.getInstance().updateInformations(this.informationList);
+        Collections.sort(Controller.getInstance().getInformationList(), new Comparator<Information>() {
+            @Override
+            public int compare(Information lhs, Information rhs) {
+                if(lhs.getDatePublication().getTime() - rhs.getDatePublication().getTime() > 0) {
+                    return -1;
+                } else if (lhs.getDatePublication().getTime() - rhs.getDatePublication().getTime() == 0) {
+                    return 0;
+                }
+                return 1;
+            }
+        });
+        if(Controller.getInstance().getInformationList().size() != 0) {
+            Controller.getInstance().updateInformations();
         }
     }
 

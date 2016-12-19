@@ -65,7 +65,11 @@ public class InformationActivity extends AppCompatActivity
 
         this.listView = (ListView) findViewById(R.id.listView);
 
-        Controller.getInstance().loadInformations();
+        if(Controller.getInstance().getInformationList().size() == 0) {
+            Controller.getInstance().loadInformations();
+        } else {
+            Controller.getInstance().updateInformations();
+        }
     }
 
     @Override

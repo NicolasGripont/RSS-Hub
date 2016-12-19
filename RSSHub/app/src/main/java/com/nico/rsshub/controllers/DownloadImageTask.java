@@ -3,6 +3,8 @@ package com.nico.rsshub.controllers;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
+import com.nico.rsshub.modeles.Information;
+
 import java.io.InputStream;
 
 /**
@@ -11,18 +13,18 @@ import java.io.InputStream;
 
 public class DownloadImageTask extends Thread {
 
-    private String imageURL = null;
+    private Information information;
 
     private Bitmap bitmap;
 
-    public DownloadImageTask(String imageURL) {
+    public DownloadImageTask(Information information) {
         super();
         this.bitmap = null;
-        this.imageURL = imageURL;
+        this.information = information;
     }
 
-    public String getImageURL() {
-        return imageURL;
+    public Information getInformation() {
+        return information;
     }
 
     public Bitmap getBitmap() {
@@ -35,7 +37,7 @@ public class DownloadImageTask extends Thread {
         Bitmap bitmap;
         try {
             // Download Image from URL
-            InputStream input = new java.net.URL(imageURL).openStream();
+            InputStream input = new java.net.URL(this.information.getImage()).openStream();
             // Decode Bitmap
             bitmap = BitmapFactory.decodeStream(input);
 

@@ -10,6 +10,7 @@ import com.nico.rsshub.modeles.Information;
 import com.nico.rsshub.views.InformationActivity;
 import com.nico.rsshub.views.InformationDetailActivity;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,7 +26,10 @@ public class Controller {
     private InformationActivity informationActivity = null;
     private InformationDetailActivity informationDetailActivity = null;
     private Activity currentActivity = null;
-    private Map<String, Bitmap> images = null;
+    private List<Information> informationList = null;
+    private Map<Feed,List<Information>> feeds = null;
+    private Map<Information, Bitmap> images = null;
+    private Semaphore mutexFeeds = null;
     private Semaphore mutexImages = null;
 
     public static Controller getInstance() {
@@ -36,13 +40,20 @@ public class Controller {
     }
 
     private Controller() {
+        informationList = new ArrayList<>();
+        feeds = new HashMap<>();
         images = new HashMap<>();
+        mutexFeeds = new Semaphore(1);
         mutexImages = new Semaphore(1);
     }
 
-    public Map<String, Bitmap> getImages() {
-        return images;
-    }
+    public List<Information> getInformationList() { return informationList; }
+
+    public Map<Feed, List<Information>> getFeeds() { return feeds; }
+
+    public Map<Information, Bitmap> getImages() { return images; }
+
+    public Semaphore getMutexFeeds() { return mutexFeeds; }
 
     public Semaphore getMutexImages() {
         return mutexImages;
@@ -91,9 +102,9 @@ public class Controller {
         }
     }
 
-    public void updateInformations(List<Information> informationList) {
+    public void updateInformations() {
       if(this.currentActivity == this.informationActivity && this.informationActivity != null) {
-          this.informationActivity.updateInformations(informationList);
+          this.informationActivity.updateInformations(this.informationList);
       }
     }
 
