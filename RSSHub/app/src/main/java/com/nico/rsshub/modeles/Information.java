@@ -1,8 +1,7 @@
 package com.nico.rsshub.modeles;
 
-import android.graphics.Bitmap;
-
 import java.io.Serializable;
+import java.util.Comparator;
 import java.util.Date;
 
 public class Information implements Serializable {
@@ -11,7 +10,7 @@ public class Information implements Serializable {
 	private String description;
 	private Date datePublication;
 	private Feed feed;
-	private Bitmap image;
+	private String image;
 
 	public Information() {
 		super();
@@ -20,11 +19,11 @@ public class Information implements Serializable {
 		this.description = "";
 		this.datePublication = null;
 		this.feed = null;
-		this.image = null;
+		this.image = "";
 	}
 
 	public Information(final String title, final String url, final String description, final Date datePublication,
-			final Feed feed, Bitmap image) {
+			final Feed feed, String image) {
 		super();
 		this.title = title;
 		this.url = url;
@@ -74,9 +73,9 @@ public class Information implements Serializable {
 		this.feed = feed;
 	}
 
-	public Bitmap getImage() { return image; }
+	public String getImage() { return image; }
 
-	public void setImage(Bitmap image) { this.image = image; }
+	public void setImage(String image) { this.image = image; }
 
 	@Override
 	public String toString() {

@@ -2,6 +2,7 @@ package com.nico.rsshub.controllers;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.widget.AdapterView;
 
 import com.nico.rsshub.modeles.Feed;
@@ -9,7 +10,10 @@ import com.nico.rsshub.modeles.Information;
 import com.nico.rsshub.views.InformationActivity;
 import com.nico.rsshub.views.InformationDetailActivity;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.Semaphore;
 
 /**
  * Created by Nico on 14/12/2016.
@@ -18,9 +22,11 @@ import java.util.List;
 public class Controller {
 
     private static Controller instance = null;
-    InformationActivity informationActivity = null;
-    InformationDetailActivity informationDetailActivity = null;
-    Activity currentActivity = null;
+    private InformationActivity informationActivity = null;
+    private InformationDetailActivity informationDetailActivity = null;
+    private Activity currentActivity = null;
+    private Map<String, Bitmap> images = null;
+    private Semaphore mutexImages = null;
 
     public static Controller getInstance() {
         if(instance == null) {
@@ -30,9 +36,17 @@ public class Controller {
     }
 
     private Controller() {
-
+        images = new HashMap<>();
+        mutexImages = new Semaphore(1);
     }
 
+    public Map<String, Bitmap> getImages() {
+        return images;
+    }
+
+    public Semaphore getMutexImages() {
+        return mutexImages;
+    }
 
     public void setCurrentActivity(Activity activity) {
         if(activity.getClass().equals(InformationActivity.class)) {

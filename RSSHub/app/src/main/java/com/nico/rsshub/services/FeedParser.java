@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Environment;
 
+import com.nico.rsshub.controllers.DownloadImageTask;
 import com.nico.rsshub.modeles.Feed;
 import com.nico.rsshub.modeles.Information;
 
@@ -35,14 +36,16 @@ public class FeedParser {
 
 	private long refreshTimeInMs;
 
+	private List<DownloadImageTask> downloadImageTasks;
+
 	public FeedParser() {
-		super();
-		this.refreshTimeInMs = 0;
+		this(0);
 	}
 
 	public FeedParser(final long refreshTime) {
 		super();
 		this.refreshTimeInMs = refreshTime;
+		downloadImageTasks = new ArrayList<>();
 	}
 
 	public long getRefreshTimeInMs() {
@@ -141,7 +144,7 @@ public class FeedParser {
 
 				//image
 				if(item.getChild("enclosure") != null && item.getChild("enclosure").getAttributeValue("type").contains("image")) {
-//					information.setImage(this.downloadImage(item.getChild("enclosure").getAttributeValue("url")));
+					information.setImage(item.getChild("enclosure").getAttributeValue("url"));
 				}
 
 				//url
@@ -190,18 +193,4 @@ public class FeedParser {
 
 		return newDate;
 	}
-
-	protected Bitmap downloadImage(String imageURL) {
-		Bitmap bitmap = null;
-		try {
-			// Download Image from URL
-			InputStream input = new java.net.URL(imageURL).openStream();
-			// Decode Bitmap
-			bitmap = BitmapFactory.decodeStream(input);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return bitmap;
-	}
-
 }

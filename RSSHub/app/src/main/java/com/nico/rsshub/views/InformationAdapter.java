@@ -1,6 +1,7 @@
 package com.nico.rsshub.views;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.nico.rsshub.R;
+import com.nico.rsshub.controllers.Controller;
 import com.nico.rsshub.modeles.Information;
 
 import java.text.DateFormat;
@@ -61,19 +63,33 @@ public class InformationAdapter extends BaseAdapter {
         TextView information_category = (TextView)layoutItem.findViewById(R.id.information_category);
         TextView information_title = (TextView)layoutItem.findViewById(R.id.information_title);
         TextView information_date = (TextView)layoutItem.findViewById(R.id.information_date);
-//        ImageView information_image = (ImageView)layoutItem.findViewById(R.id.information_image);
+        ImageView information_image = (ImageView)layoutItem.findViewById(R.id.information_image);
 
         //(3) : Renseignement des valeurs
         information_feed.setText(informationList.get(position).getFeed().getTitle());
         information_category.setText(informationList.get(position).getFeed().getCategory());
         information_title.setText(informationList.get(position).getTitle());
         if(informationList.get(position).getDatePublication() != null) {
-            DateFormat dateFormat = new SimpleDateFormat("dd/MM hh:mm", Locale.ENGLISH);
+            DateFormat dateFormat = new SimpleDateFormat("dd/MM HH:mm", Locale.ENGLISH);
             information_date.setText(dateFormat.format(informationList.get(position).getDatePublication()));
         }
-//        if(informationList.get(position).getImage() != null) {
-//            information_image.setImageBitmap(informationList.get(position).getImage());
-//        }
+        if(this.informationList.get(position).getImage() != null && !this.informationList.get(position).getImage().equals("")) {
+            Bitmap image = Controller.getInstance().getImages().get(this.informationList.get(position).getImage());
+            if(image != null) {
+                try {
+                    double ratio = (information_image.getWidth()*1.0) / (image.getWidth()*1.0);
+                    Bitmap newBitmap = Bitmap.createScaledBitmap(image, (int) (image.getWidth() * ratio), (int) (image.getHeight() * ratio), false);
+                    information_image.setImageBitmap(newBitmap);
+                } catch (Exception e){
+//                    layoutItem.removeView(information_image);
+                }
+            } else {
+//                layoutItem.removeView(information_image);
+            }
+        } else {
+//            layoutItem.removeView(information_image);
+        }
+
 
         //On retourne l'item créé.
         return layoutItem;
