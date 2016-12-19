@@ -9,6 +9,7 @@ import com.nico.rsshub.modeles.Feed;
 import com.nico.rsshub.modeles.Information;
 import com.nico.rsshub.views.InformationActivity;
 import com.nico.rsshub.views.InformationDetailActivity;
+import com.nico.rsshub.views.SplashActivity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,6 +24,7 @@ import java.util.concurrent.Semaphore;
 public class Controller {
 
     private static Controller instance = null;
+    private SplashActivity splashActivity = null;
     private InformationActivity informationActivity = null;
     private InformationDetailActivity informationDetailActivity = null;
     private Activity currentActivity = null;
@@ -60,7 +62,10 @@ public class Controller {
     }
 
     public void setCurrentActivity(Activity activity) {
-        if(activity.getClass().equals(InformationActivity.class)) {
+        if(activity.getClass().equals(SplashActivity.class)) {
+            this.splashActivity = (SplashActivity) activity;
+            this.currentActivity = activity;
+        } else if(activity.getClass().equals(InformationActivity.class)) {
             this.informationActivity = (InformationActivity) activity;
             this.currentActivity = activity;
         } else if(activity.getClass().equals(InformationDetailActivity.class)) {
@@ -101,6 +106,15 @@ public class Controller {
             testUrlTask.execute(information.getUrl());
         }
     }
+
+    public void showInformationActivity() {
+        if(this.currentActivity == this.splashActivity && this.splashActivity != null) {
+            Intent intent = new Intent(this.splashActivity, InformationActivity.class);
+            this.splashActivity.startActivity(intent);
+            this.splashActivity.finish();
+        }
+    }
+
 
     public void updateInformations() {
       if(this.currentActivity == this.informationActivity && this.informationActivity != null) {

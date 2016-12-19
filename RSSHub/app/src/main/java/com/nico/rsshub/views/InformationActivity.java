@@ -50,7 +50,6 @@ public class InformationActivity extends AppCompatActivity
 
         int nb = navigationView.getHeaderCount();
 
-
         Menu m = navigationView.getMenu();
         this.favoritesMenu = m.addSubMenu(R.string.favorites);
         this.favoritesMenu.add("tmp");
@@ -61,15 +60,11 @@ public class InformationActivity extends AppCompatActivity
         this.feedsMenu  = m.addSubMenu(R.string.feeds);
         this.feedsMenu.add("tmp");
 
-        Controller.getInstance().setCurrentActivity(this);
-
         this.listView = (ListView) findViewById(R.id.listView);
 
-        if(Controller.getInstance().getInformationList().size() == 0) {
-            Controller.getInstance().loadInformations();
-        } else {
-            Controller.getInstance().updateInformations();
-        }
+        Controller.getInstance().setCurrentActivity(this);
+        Controller.getInstance().updateInformations();
+
     }
 
     @Override
