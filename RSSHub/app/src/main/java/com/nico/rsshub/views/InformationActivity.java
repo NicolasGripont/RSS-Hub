@@ -18,6 +18,7 @@ import com.nico.rsshub.R;
 import com.nico.rsshub.controllers.Controller;
 import com.nico.rsshub.modeles.Information;
 
+import java.io.FileOutputStream;
 import java.util.List;
 
 public class InformationActivity extends AppCompatActivity
@@ -64,7 +65,6 @@ public class InformationActivity extends AppCompatActivity
 
         Controller.getInstance().setCurrentActivity(this);
         Controller.getInstance().updateInformations();
-
     }
 
     @Override

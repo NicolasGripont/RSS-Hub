@@ -61,6 +61,10 @@ public class Controller {
         return mutexImages;
     }
 
+    public Activity getCurrentActivity() {
+        return currentActivity;
+    }
+
     public void setCurrentActivity(Activity activity) {
         if(activity.getClass().equals(SplashActivity.class)) {
             this.splashActivity = (SplashActivity) activity;
@@ -86,14 +90,14 @@ public class Controller {
         String[] urlSplitted = feed1.getUrl().split("/");
         feed1.setCacheFileName(urlSplitted[urlSplitted.length - 1]);
 
-        final Feed feed2 = new Feed();
-        feed2.setUrl("http://korben.info/feed");
-        feed2.setTitle("Korben");
-        feed2.setCategory("Informatique");
-        urlSplitted = feed2.getUrl().split("/");
-        feed2.setCacheFileName(urlSplitted[urlSplitted.length - 1]  + ".xml");
+//        final Feed feed2 = new Feed();
+//        feed2.setUrl("http://korben.info/feed");
+//        feed2.setTitle("Korben");
+//        feed2.setCategory("Informatique");
+//        urlSplitted = feed2.getUrl().split("/");
+//        feed2.setCacheFileName(urlSplitted[urlSplitted.length - 1]  + ".xml");
 
-        loadFeedsTask.execute(feed1,feed2);
+        loadFeedsTask.execute(feed1/*,feed2*/);
     }
 
     public void onInformationClick(AdapterView<?> adapter, int position) {

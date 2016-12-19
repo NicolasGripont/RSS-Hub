@@ -1,9 +1,16 @@
 package com.nico.rsshub.views;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
 import com.nico.rsshub.controllers.Controller;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 public class SplashActivity extends AppCompatActivity {
 
@@ -17,7 +24,37 @@ public class SplashActivity extends AppCompatActivity {
         } else {
             Controller.getInstance().showInformationActivity();
         }
+//        saveFeeds();
+//        loadFeeds();
     }
 
 
+//    private void saveFeeds(){
+//        FileOutputStream output = null;
+//        try {
+//            System.out.println(getCacheDir().getAbsolutePath()+"/feed.txt");
+//            File file = new File(getCacheDir().getAbsolutePath()+"/feed.txt");
+//            file.getParentFile().mkdir();
+//            file.createNewFile();
+//            output = new FileOutputStream(getCacheDir().getAbsolutePath()+"/feed.txt", false); // true will be same as Context.MODE_APPEND
+//            String data = "Je suis bien enregistré";
+//            output.write(data.getBytes());
+//            if(output != null)
+//                output.close();
+//        } catch (FileNotFoundException e) {
+//            e.printStackTrace();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
+//
+//    private void loadFeeds(){
+//        String data = "Je suis bien enregistré";
+//        File file = new File(getCacheDir().getAbsolutePath()+"/feed.txt");
+//        if(file.exists()){
+//            System.out.println("---------existe");
+//        } else {
+//            System.out.println("------existe pas");
+//        }
+//    }
 }

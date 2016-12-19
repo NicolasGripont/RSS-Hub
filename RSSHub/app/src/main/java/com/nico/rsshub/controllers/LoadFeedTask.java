@@ -1,5 +1,6 @@
 package com.nico.rsshub.controllers;
 
+import android.content.Context;
 import android.os.Environment;
 
 import com.nico.rsshub.modeles.Feed;
@@ -117,7 +118,7 @@ public class LoadFeedTask extends Thread {
     }
 
     private File createCacheFile(final URL url, final Feed feed) throws IOException {
-        final File cacheFile = new File(LoadFeedTask.cacheDirectory + feed.getCacheFileName());
+        final File cacheFile = new File(Controller.getInstance().getCurrentActivity().getCacheDir() + feed.getCacheFileName());
         try {
             final HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
             httpURLConnection.addRequestProperty("User-Agent", "Mozilla/4.0");
