@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -46,6 +47,7 @@ public class InformationAdapter extends BaseAdapter {
 
     public View getView(int position, View convertView, ViewGroup parent) {
         LinearLayout layoutItem;
+
         //(1) : Réutilisation des layouts
         if (convertView == null) {
             //Initialisation de notre item à partir du  layout XML "personne_layout.xml"
@@ -59,21 +61,18 @@ public class InformationAdapter extends BaseAdapter {
         TextView information_category = (TextView)layoutItem.findViewById(R.id.information_category);
         TextView information_title = (TextView)layoutItem.findViewById(R.id.information_title);
         TextView information_date = (TextView)layoutItem.findViewById(R.id.information_date);
+//        ImageView information_image = (ImageView)layoutItem.findViewById(R.id.information_image);
 
         //(3) : Renseignement des valeurs
-        information_feed.setText("L'Equipe");
-        information_category.setText("Sport");
+        information_feed.setText(informationList.get(position).getFeed().getTitle());
+        information_category.setText(informationList.get(position).getFeed().getCategory());
         information_title.setText(informationList.get(position).getTitle());
         if(informationList.get(position).getDatePublication() != null) {
             DateFormat dateFormat = new SimpleDateFormat("dd/MM hh:mm", Locale.ENGLISH);
             information_date.setText(dateFormat.format(informationList.get(position).getDatePublication()));
         }
-
-        //(4) Changement de la couleur du fond de notre item
-//        if (informationList.get(position).genre == Personne.MASCULIN) {
-//            layoutItem.setBackgroundColor(Color.BLUE);
-//        } else {
-//            layoutItem.setBackgroundColor(Color.MAGENTA);
+//        if(informationList.get(position).getImage() != null) {
+//            information_image.setImageBitmap(informationList.get(position).getImage());
 //        }
 
         //On retourne l'item créé.

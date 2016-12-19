@@ -51,11 +51,15 @@ public class Controller {
 
         final Feed feed1 = new Feed();
         feed1.setUrl("http://www.lequipe.fr/rss/actu_rss.xml");
+        feed1.setTitle("L'Equipe");
+        feed1.setCategory("Sport");
         String[] urlSplitted = feed1.getUrl().split("/");
         feed1.setCacheFileName(urlSplitted[urlSplitted.length - 1]);
 
         final Feed feed2 = new Feed();
         feed2.setUrl("http://korben.info/feed");
+        feed2.setTitle("Korben");
+        feed2.setCategory("Informatique");
         urlSplitted = feed2.getUrl().split("/");
         feed2.setCacheFileName(urlSplitted[urlSplitted.length - 1]  + ".xml");
 
