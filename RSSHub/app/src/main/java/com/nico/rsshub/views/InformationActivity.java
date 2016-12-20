@@ -58,8 +58,8 @@ public class InformationActivity extends AppCompatActivity
         setContentView(R.layout.activity_information);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        toolbar.setLogo(R.mipmap.logo_rss_hub);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
+//        toolbar.setLogo(R.mipmap.logo_rss_hub);
+//        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -177,7 +177,10 @@ public class InformationActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-//
+
+        if(id == R.id.nav_manage_feeds) {
+            Controller.getInstance().onMannageFeedsClicked();
+        }
 //        if (id == R.id.nav_camera) {
 //            // Handle the camera action
 //        } else if (id == R.id.nav_gallery) {

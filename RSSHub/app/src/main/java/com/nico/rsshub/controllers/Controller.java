@@ -10,6 +10,7 @@ import com.nico.rsshub.modeles.Feed;
 import com.nico.rsshub.modeles.Information;
 import com.nico.rsshub.views.InformationActivity;
 import com.nico.rsshub.views.InformationDetailActivity;
+import com.nico.rsshub.views.ManageFeedsActivity;
 import com.nico.rsshub.views.SplashActivity;
 
 import java.util.ArrayList;
@@ -28,6 +29,8 @@ public class Controller {
     private SplashActivity splashActivity = null;
     private InformationActivity informationActivity = null;
     private InformationDetailActivity informationDetailActivity = null;
+    private ManageFeedsActivity manageFeedsActivity = null;
+
     private Activity currentActivity = null;
     private List<Information> informationList = null;
     private Map<Feed,List<Information>> feeds = null;
@@ -75,6 +78,9 @@ public class Controller {
             this.currentActivity = activity;
         } else if(activity.getClass().equals(InformationDetailActivity.class)) {
             this.informationDetailActivity = (InformationDetailActivity) activity;
+            this.currentActivity = activity;
+        } else if(activity.getClass().equals(ManageFeedsActivity.class)) {
+            this.manageFeedsActivity = (ManageFeedsActivity) activity;
             this.currentActivity = activity;
         } else {
             this.currentActivity = null;
@@ -160,5 +166,26 @@ public class Controller {
         }
 
         return sb.toString();
+    }
+
+    public void onMannageFeedsClicked() {
+        if(this.currentActivity == this.informationActivity && this.informationActivity != null) {
+            Intent intent = new Intent(this.informationActivity, ManageFeedsActivity.class);
+            this.informationActivity.startActivity(intent);
+        }
+    }
+
+    public void onBackClicked() {
+        if(this.currentActivity != null) {
+            if(this.currentActivity == this.informationDetailActivity) {
+                this.setCurrentActivity(this.informationActivity);
+                this.informationDetailActivity.finish();
+                this.informationDetailActivity = null;
+            } else if(this.currentActivity == this.manageFeedsActivity) {
+                this.setCurrentActivity(this.informationActivity);
+                this.manageFeedsActivity.finish();
+                this.manageFeedsActivity = null;
+            }
+        }
     }
 }
