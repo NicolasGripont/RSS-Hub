@@ -2,6 +2,7 @@ package com.nico.rsshub.views;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,10 +31,13 @@ public class InformationAdapter extends BaseAdapter {
 
     private LayoutInflater layoutInflater;
 
-    public InformationAdapter(Context context, List<Information> informationList) {
+    private boolean withImage;
+
+    public InformationAdapter(Context context, List<Information> informationList, boolean withImage) {
         this.context = context;
         this.informationList = informationList;
         this.layoutInflater = LayoutInflater.from(context);
+        this.withImage = withImage;
     }
 
     public int getCount() {
@@ -65,6 +69,7 @@ public class InformationAdapter extends BaseAdapter {
         TextView information_title = (TextView)layoutItem.findViewById(R.id.information_title);
         TextView information_date = (TextView)layoutItem.findViewById(R.id.information_date);
         ImageView information_image = (ImageView)layoutItem.findViewById(R.id.information_image);
+        LinearLayout LL_Fond = (LinearLayout)layoutItem.findViewById(R.id.LL_Fond);
 
         //(3) : Renseignement des valeurs
         information_feed.setText(informationList.get(position).getFeed().getTitle());
@@ -75,14 +80,18 @@ public class InformationAdapter extends BaseAdapter {
             information_date.setText(dateFormat.format(informationList.get(position).getDatePublication()));
         }
 
-        if(this.informationList.get(position).getImage() != null && !this.informationList.get(position).getImage().equals("")) {
-            Bitmap image = Controller.getInstance().getImages().get(this.informationList.get(position));
-            if(image != null) {
-                try {
-                    double ratio = (information_image.getWidth()*1.0) / (image.getWidth()*1.0);
-                    Bitmap newBitmap = Bitmap.createScaledBitmap(image, (int) (image.getWidth() * ratio), (int) (image.getHeight() * ratio), false);
-                    information_image.setImageBitmap(newBitmap);
-                } catch (Exception e){
+        if(this.withImage) {
+            if (this.informationList.get(position).getImage() != null && !this.informationList.get(position).getImage().equals("")) {
+                Bitmap image = Controller.getInstance().getImages().get(this.informationList.get(position));
+                if (image != null) {
+                    try {
+                        double ratio = (information_image.getWidth() * 1.0) / (image.getWidth() * 1.0);
+                        Bitmap newBitmap = Bitmap.createScaledBitmap(image, (int) (image.getWidth() * ratio), (int) (image.getHeight() * ratio), false);
+                        information_image.setImageBitmap(newBitmap);
+                    } catch (Exception e) {
+                        information_image.setImageDrawable(null);
+                    }
+                } else {
                     information_image.setImageDrawable(null);
                 }
             } else {
@@ -92,6 +101,19 @@ public class InformationAdapter extends BaseAdapter {
             information_image.setImageDrawable(null);
         }
 
+        if(informationList.get(position).getFeed().isFavorite()) {
+//            LL_Fond.setBackgroundColor(ContextCompat.getColor(context, R.color.black));
+//            information_title.setTextColor(ContextCompat.getColor(context, R.color.white));
+//            information_feed.setBackgroundColor(ContextCompat.getColor(context, R.color.white));
+//            information_feed.setTextColor(ContextCompat.getColor(context, R.color.black));
+            information_feed.setBackgroundColor(ContextCompat.getColor(context, R.color.orange));
+        } else {
+//            LL_Fond.setBackgroundColor(ContextCompat.getColor(context, R.color.white));
+//            information_title.setTextColor(ContextCompat.getColor(context, R.color.black));
+//            information_feed.setBackgroundColor(ContextCompat.getColor(context, R.color.black));
+//            information_feed.setTextColor(ContextCompat.getColor(context, R.color.white));
+            information_feed.setBackgroundColor(ContextCompat.getColor(context, R.color.black));
+        }
 
         //On retourne l'item créé.
         return layoutItem;

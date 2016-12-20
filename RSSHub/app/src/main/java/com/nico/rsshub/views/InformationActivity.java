@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.view.SubMenu;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TabHost;
@@ -202,18 +203,49 @@ public class InformationActivity extends AppCompatActivity
 
 
 
-    public void updateInformations(final List<Information> informations) {
-        if(informations != null) {
-            InformationAdapter adapter = new InformationAdapter(this, informations);
-            listViewNews.setAdapter(adapter);
+    public void updateInformations(final List<Information> all, final List<Information> favorites) {
+        InformationAdapter adapterNews = new InformationAdapter(this, all, true);
+        listViewNews.setAdapter(adapterNews);
+        listViewNews.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapter, View view, int position, long arg3) {
+                Controller.getInstance().onInformationClick(adapter,position);
+            }
+        });
 
-            listViewNews.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> adapter, View view, int position, long arg3) {
-                    Controller.getInstance().onInformationClick(adapter,position);
-                }
-            });
-        }
+        InformationAdapter adapterChrono = new InformationAdapter(this, all, false);
+        listViewChrono.setAdapter(adapterChrono);
+        listViewChrono.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapter, View view, int position, long arg3) {
+                Controller.getInstance().onInformationClick(adapter,position);
+            }
+        });
+
+        InformationAdapter adapterNewsFavorites = new InformationAdapter(this, favorites, true);
+        listViewNewsFavorites.setAdapter(adapterNewsFavorites);
+        listViewNewsFavorites.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapter, View view, int position, long arg3) {
+                Controller.getInstance().onInformationClick(adapter,position);
+            }
+        });
+
+        InformationAdapter adapterChronoFavorites = new InformationAdapter(this, favorites, false);
+        listViewChronoFavorites.setAdapter(adapterChronoFavorites);
+        listViewChronoFavorites.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapter, View view, int position, long arg3) {
+                Controller.getInstance().onInformationClick(adapter,position);
+            }
+        });
+
     }
 
+    public void refreshListViews() {
+        ((BaseAdapter) listViewNews.getAdapter()).notifyDataSetChanged();
+        ((BaseAdapter) listViewChrono.getAdapter()).notifyDataSetChanged();
+        ((BaseAdapter) listViewNewsFavorites.getAdapter()).notifyDataSetChanged();
+        ((BaseAdapter) listViewChronoFavorites.getAdapter()).notifyDataSetChanged();
+    }
 }

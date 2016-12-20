@@ -14,6 +14,8 @@ import com.nico.rsshub.views.ManageFeedsActivity;
 import com.nico.rsshub.views.SplashActivity;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,6 +35,7 @@ public class Controller {
 
     private Activity currentActivity = null;
     private List<Information> informationList = null;
+    private List<Information> favorites = null;
     private Map<Feed,List<Information>> feeds = null;
     private Map<Information, Bitmap> images = null;
     private List<Feed> feedsList = null;
@@ -48,6 +51,7 @@ public class Controller {
 
     private Controller() {
         informationList = new ArrayList<>();
+        favorites = new ArrayList<>();
         feeds = new HashMap<>();
         images = new HashMap<>();
         mutexFeeds = new Semaphore(1);
@@ -56,6 +60,8 @@ public class Controller {
     }
 
     public List<Information> getInformationList() { return informationList; }
+
+    public List<Information> getFavorites() { return favorites; }
 
     public Map<Feed, List<Information>> getFeeds() { return feeds; }
 
@@ -140,7 +146,7 @@ public class Controller {
 
     public void updateInformations() {
       if(this.currentActivity == this.informationActivity && this.informationActivity != null) {
-          this.informationActivity.updateInformations(this.informationList);
+          this.informationActivity.updateInformations(this.informationList,this.favorites);
       }
     }
 
@@ -190,6 +196,8 @@ public class Controller {
                 this.setCurrentActivity(this.informationActivity);
                 this.manageFeedsActivity.finish();
                 this.manageFeedsActivity = null;
+                this.updateFavorites();
+                this.informationActivity.refreshListViews();
             }
         }
     }
@@ -207,6 +215,15 @@ public class Controller {
             if (this.currentActivity == this.manageFeedsActivity) {
                 feed.setFavorite(!feed.isFavorite());
                 this.manageFeedsActivity.refreshListViewFeeds();
+            }
+        }
+    }
+
+    public void updateFavorites() {
+        this.favorites.clear();
+        for(Information information : this.informationList) {
+            if(information.getFeed().isFavorite()){
+                favorites.add(information);
             }
         }
     }

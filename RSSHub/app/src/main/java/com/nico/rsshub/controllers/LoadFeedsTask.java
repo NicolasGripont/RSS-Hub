@@ -87,6 +87,9 @@ public class LoadFeedsTask extends AsyncTask<Feed, Integer, String> {
                 return 1;
             }
         });
+
+        Controller.getInstance().updateFavorites();
+
         if(Controller.getInstance().getInformationList().size() != 0) {
             Controller.getInstance().showInformationActivity();
         }
