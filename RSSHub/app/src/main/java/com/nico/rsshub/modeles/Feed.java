@@ -8,6 +8,7 @@ public class Feed implements Serializable {
 	private String url;
 	private String cacheFileName;
 	private Category category;
+	private boolean isFavorite;
 
 	public Feed() {
 		super();
@@ -15,14 +16,16 @@ public class Feed implements Serializable {
 		this.url = "";
 		this.cacheFileName = "";
 		this.category = Category.OTHER;
+		this.isFavorite = false;
 	}
 
-	public Feed(final String title, final String url, final List<String> tags, final Category category, final String cacheFileName) {
+	public Feed(final String title, final String url, final List<String> tags, final Category category, final String cacheFileName, final boolean isFavorite) {
 		super();
 		this.title = title;
 		this.url = url;
 		this.cacheFileName = cacheFileName;
 		this.category = category;
+		this.isFavorite = isFavorite;
 	}
 
 	public String getTitle() {
@@ -53,4 +56,18 @@ public class Feed implements Serializable {
 
 	public void setCategory(Category category) { this.category = category; }
 
+	public boolean isFavorite() { return isFavorite; }
+
+	public void setFavorite(boolean favorite) { isFavorite = favorite; }
+
+	@Override
+	public String toString() {
+		return "Feed{" +
+				"title='" + title + '\'' +
+				", url='" + url + '\'' +
+				", cacheFileName='" + cacheFileName + '\'' +
+				", category=" + category +
+				", isFavorite=" + isFavorite +
+				'}';
+	}
 }

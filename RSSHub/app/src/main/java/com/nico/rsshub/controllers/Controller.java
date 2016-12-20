@@ -35,6 +35,7 @@ public class Controller {
     private List<Information> informationList = null;
     private Map<Feed,List<Information>> feeds = null;
     private Map<Information, Bitmap> images = null;
+    private List<Feed> feedsList = null;
     private Semaphore mutexFeeds = null;
     private Semaphore mutexImages = null;
 
@@ -51,6 +52,7 @@ public class Controller {
         images = new HashMap<>();
         mutexFeeds = new Semaphore(1);
         mutexImages = new Semaphore(1);
+        feedsList = new ArrayList<>();
     }
 
     public List<Information> getInformationList() { return informationList; }
@@ -68,6 +70,8 @@ public class Controller {
     public Activity getCurrentActivity() {
         return currentActivity;
     }
+
+    public List<Feed> getFeedsList() { return feedsList; }
 
     public void setCurrentActivity(Activity activity) {
         if(activity.getClass().equals(SplashActivity.class)) {
@@ -90,12 +94,12 @@ public class Controller {
     public void loadInformations(){
         LoadFeedsTask loadFeedsTask = new LoadFeedsTask();
 
-
         final Feed feed1 = new Feed();
         feed1.setUrl("http://www.lequipe.fr/rss/actu_rss.xml");
         feed1.setTitle("L'Equipe");
         feed1.setCategory(Category.SPORT);
         feed1.setCacheFileName(createCacheFileName(feed1.getTitle(),feed1.getUrl()));
+        feed1.setFavorite(true);
 
         final Feed feed2 = new Feed();
         feed2.setUrl("http://korben.info/feed");
@@ -103,9 +107,15 @@ public class Controller {
         feed2.setCategory(Category.COMPUTING);
         feed2.setCacheFileName(createCacheFileName(feed2.getTitle(),feed2.getUrl()));
 
-        System.out.println(feed1.getCacheFileName());
-        System.out.println(feed2.getCacheFileName());
-        loadFeedsTask.execute(feed1,feed2);
+        feedsList.add(feed1);
+        feedsList.add(feed2);
+
+        Feed[] feeds = new Feed[feedsList.size()];
+        for(int i = 0; i < feedsList.size(); i++) {
+            feeds[i] = feedsList.get(i);
+        }
+
+        loadFeedsTask.execute(feeds);
     }
 
     public void onInformationClick(AdapterView<?> adapter, int position) {
@@ -140,16 +150,11 @@ public class Controller {
         }
     }
 
-    public void backToInformationActivity() {
-        this.setCurrentActivity(this.informationActivity);
-    }
-
-
     private String createCacheFileName(String feedName, String url) {
         StringBuilder sb = new StringBuilder();
 
         //ajout dossier cache
-        sb.append(Controller.getInstance().getCurrentActivity().getCacheDir().getAbsolutePath());
+        sb.append(this.getCurrentActivity().getCacheDir().getAbsolutePath());
         sb.append("/");
 
         //ajout nom du nom du feed
@@ -188,4 +193,22 @@ public class Controller {
             }
         }
     }
+
+    public void onPlusButtonClicked() {
+        if(this.currentActivity != null) {
+            if (this.currentActivity == this.manageFeedsActivity) {
+
+            }
+        }
+    }
+
+    public void onFavoriteButtonClicked(Feed feed) {
+        if(this.currentActivity != null) {
+            if (this.currentActivity == this.manageFeedsActivity) {
+                feed.setFavorite(!feed.isFavorite());
+                this.manageFeedsActivity.refreshListViewFeeds();
+            }
+        }
+    }
+
 }

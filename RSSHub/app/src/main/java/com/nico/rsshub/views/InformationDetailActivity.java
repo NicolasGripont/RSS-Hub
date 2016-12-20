@@ -1,7 +1,9 @@
 package com.nico.rsshub.views;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.webkit.WebView;
@@ -22,6 +24,7 @@ public class InformationDetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_information_detail);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        setTitle(R.string.app_name);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -30,6 +33,8 @@ public class InformationDetailActivity extends AppCompatActivity {
                 onBackPressed();
             }
         });
+
+        Controller.getInstance().setCurrentActivity(this);
 
         this.webView = (WebView) findViewById(R.id.webView);
 
@@ -50,8 +55,9 @@ public class InformationDetailActivity extends AppCompatActivity {
     }
 
     @Override
-    public void finish() {
-        super.finish();
-        Controller.getInstance().backToInformationActivity();
+    public void onBackPressed() {
+        super.onBackPressed();
+        Controller.getInstance().onBackClicked();
     }
+
 }
