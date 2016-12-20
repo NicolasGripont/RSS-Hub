@@ -29,7 +29,7 @@ public class InformationDetailActivity extends AppCompatActivity {
     }
 
     public void showLoading() {
-        String summary = "<html><body><h1>Chargement</h1></body></html>";
+        String summary = "<html><body><h1>Chargement...</h1></body></html>";
         this.webView.loadData(summary, "text/html; charset=utf-8", "utf-8");
     }
 
