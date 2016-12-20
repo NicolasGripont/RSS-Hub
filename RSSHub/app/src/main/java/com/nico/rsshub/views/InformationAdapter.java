@@ -68,7 +68,7 @@ public class InformationAdapter extends BaseAdapter {
 
         //(3) : Renseignement des valeurs
         information_feed.setText(informationList.get(position).getFeed().getTitle());
-        information_category.setText(informationList.get(position).getFeed().getCategory());
+        information_category.setText(informationList.get(position).getFeed().getCategory().getValue());
         information_title.setText(informationList.get(position).getTitle());
         if(informationList.get(position).getDatePublication() != null) {
             DateFormat dateFormat = new SimpleDateFormat("dd/MM HH:mm", Locale.ENGLISH);

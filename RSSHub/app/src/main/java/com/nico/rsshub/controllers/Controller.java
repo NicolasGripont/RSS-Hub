@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.widget.AdapterView;
 
+import com.nico.rsshub.modeles.Category;
 import com.nico.rsshub.modeles.Feed;
 import com.nico.rsshub.modeles.Information;
 import com.nico.rsshub.views.InformationActivity;
@@ -83,21 +84,22 @@ public class Controller {
     public void loadInformations(){
         LoadFeedsTask loadFeedsTask = new LoadFeedsTask();
 
+
         final Feed feed1 = new Feed();
         feed1.setUrl("http://www.lequipe.fr/rss/actu_rss.xml");
         feed1.setTitle("L'Equipe");
-        feed1.setCategory("Sport");
-        String[] urlSplitted = feed1.getUrl().split("/");
-        feed1.setCacheFileName(urlSplitted[urlSplitted.length - 1]);
+        feed1.setCategory(Category.SPORT);
+        feed1.setCacheFileName(createCacheFileName(feed1.getTitle(),feed1.getUrl()));
 
-//        final Feed feed2 = new Feed();
-//        feed2.setUrl("http://korben.info/feed");
-//        feed2.setTitle("Korben");
-//        feed2.setCategory("Informatique");
-//        urlSplitted = feed2.getUrl().split("/");
-//        feed2.setCacheFileName(urlSplitted[urlSplitted.length - 1]  + ".xml");
+        final Feed feed2 = new Feed();
+        feed2.setUrl("http://korben.info/feed");
+        feed2.setTitle("Korben");
+        feed2.setCategory(Category.COMPUTING);
+        feed2.setCacheFileName(createCacheFileName(feed2.getTitle(),feed2.getUrl()));
 
-        loadFeedsTask.execute(feed1/*,feed2*/);
+        System.out.println(feed1.getCacheFileName());
+        System.out.println(feed2.getCacheFileName());
+        loadFeedsTask.execute(feed1,feed2);
     }
 
     public void onInformationClick(AdapterView<?> adapter, int position) {
@@ -134,5 +136,29 @@ public class Controller {
 
     public void backToInformationActivity() {
         this.setCurrentActivity(this.informationActivity);
+    }
+
+
+    private String createCacheFileName(String feedName, String url) {
+        StringBuilder sb = new StringBuilder();
+
+        //ajout dossier cache
+        sb.append(Controller.getInstance().getCurrentActivity().getCacheDir().getAbsolutePath());
+        sb.append("/");
+
+        //ajout nom du nom du feed
+        sb.append(feedName.replaceAll("[^A-Z^a-z^0-9]", ""));
+        sb.append(".");
+
+        //ajout nom du fichier de l'url
+        String[] urlSplitted = url.split("/");
+        sb.append(urlSplitted[urlSplitted.length - 1]);
+
+        //ajout extension .xml
+        if(!urlSplitted[urlSplitted.length - 1].endsWith(".xml")) {
+            sb.append(".xml");
+        }
+
+        return sb.toString();
     }
 }

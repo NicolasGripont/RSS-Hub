@@ -118,14 +118,14 @@ public class LoadFeedTask extends Thread {
     }
 
     private File createCacheFile(final URL url, final Feed feed) throws IOException {
-        final File cacheFile = new File(Controller.getInstance().getCurrentActivity().getCacheDir() + feed.getCacheFileName());
+        final File cacheFile = new File(feed.getCacheFileName());
         try {
             final HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
             httpURLConnection.addRequestProperty("User-Agent", "Mozilla/4.0");
 
             final InputStream inputStream = httpURLConnection.getInputStream();
 //            if (!cacheFile.exists()) {
-                cacheFile.getParentFile().mkdirs();
+                cacheFile.getParentFile().mkdir();
                 cacheFile.createNewFile();
                 final OutputStream outputStream = new FileOutputStream(cacheFile);
 

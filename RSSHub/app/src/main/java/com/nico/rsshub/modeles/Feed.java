@@ -1,32 +1,28 @@
 package com.nico.rsshub.modeles;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 public class Feed implements Serializable {
 	private String title;
 	private String url;
 	private String cacheFileName;
-	private String category;
-	private List<String> tags;
+	private Category category;
 
 	public Feed() {
 		super();
 		this.title = "";
 		this.url = "";
 		this.cacheFileName = "";
-		this.category = "";
-		this.tags = new ArrayList<>();
+		this.category = Category.OTHER;
 	}
 
-	public Feed(final String title, final String url, final List<String> tags, final String category, final String cacheFileName) {
+	public Feed(final String title, final String url, final List<String> tags, final Category category, final String cacheFileName) {
 		super();
 		this.title = title;
 		this.url = url;
 		this.cacheFileName = cacheFileName;
 		this.category = category;
-		this.tags = tags;
 	}
 
 	public String getTitle() {
@@ -53,16 +49,8 @@ public class Feed implements Serializable {
 		this.cacheFileName = cacheFileName;
 	}
 
-	public String getCategory() { return category; }
+	public Category getCategory() { return category; }
 
-	public void setCategory(String category) { this.category = category; }
-
-	public List<String> getTags() {
-		return this.tags;
-	}
-
-	public void setTags(final List<String> tags) {
-		this.tags = tags;
-	}
+	public void setCategory(Category category) { this.category = category; }
 
 }

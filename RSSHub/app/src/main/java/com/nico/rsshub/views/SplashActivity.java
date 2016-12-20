@@ -1,16 +1,9 @@
 package com.nico.rsshub.views;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
 import com.nico.rsshub.controllers.Controller;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 
 public class SplashActivity extends AppCompatActivity {
 

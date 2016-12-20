@@ -6,7 +6,15 @@
 
     <string name="action_settings">Settings</string>
     <string name="favorites">Favoris</string>
-    <string name="categories">Catégories</string>
     <string name="feeds">Feeds</string>
+    <string name="categories">Catégories</string>
+    <string name="sport">Sport</string>
+    <string name="computing">Informatique</string>
+    <string name="economy">Economie</string>
+    <string name="sciences">Sciences</string>
+    <string name="culture">Culture</string>
+    <string name="ecology">Ecologie</string>
+    <string name="multimedia">Multimédia</string>
+    <string name="other">Autre</string>
 
 </resources>
