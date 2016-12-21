@@ -2,6 +2,11 @@ package com.nico.rsshub.modeles;
 
 import com.nico.rsshub.R;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
 /**
  * Created by Nico on 20/12/2016.
  */
@@ -25,4 +30,5 @@ public enum Category {
     public int getValue() {
         return value;
     }
+
 }

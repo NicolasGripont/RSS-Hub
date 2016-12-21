@@ -147,6 +147,7 @@ public class Controller {
     public void updateInformations() {
       if(this.currentActivity == this.informationActivity && this.informationActivity != null) {
           this.informationActivity.updateInformations(this.informationList,this.favorites);
+          this.informationActivity.refreshNavigationMenu(this.feedsList);
       }
     }
 
@@ -198,6 +199,7 @@ public class Controller {
                 this.manageFeedsActivity = null;
                 this.updateFavorites();
                 this.informationActivity.refreshListViews();
+                this.informationActivity.refreshNavigationMenu(this.feedsList);
             }
         }
     }

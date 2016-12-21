@@ -22,7 +22,7 @@
 
     <string name="news">News</string>
     <string name="chrono">Chrono</string>
-    <string name="chrono_favorites">Favoris Chrono</string>
+    <string name="chrono_favorites">Chrono Favoris</string>
     <string name="title_activity_manage_feeds">ManageFeedsActivity</string>
     <string name="title_activity_information_detail">InformationDetailActivity</string>
 

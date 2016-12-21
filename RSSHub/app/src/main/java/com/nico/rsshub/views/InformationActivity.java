@@ -25,6 +25,8 @@ import android.widget.TabHost;
 
 import com.nico.rsshub.R;
 import com.nico.rsshub.controllers.Controller;
+import com.nico.rsshub.modeles.Category;
+import com.nico.rsshub.modeles.Feed;
 import com.nico.rsshub.modeles.Information;
 
 import java.io.FileOutputStream;
@@ -60,6 +62,8 @@ public class InformationActivity extends AppCompatActivity
 
     private Button chronoFavoritesButton;
 
+    private NavigationView navigationView;
+
     @TargetApi(Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,20 +81,12 @@ public class InformationActivity extends AppCompatActivity
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-
-        int nb = navigationView.getHeaderCount();
-
-        Menu m = navigationView.getMenu();
+        this.navigationView = (NavigationView) findViewById(R.id.nav_view);
+        this.navigationView.setNavigationItemSelectedListener(this);
+        Menu m = this.navigationView.getMenu();
         this.favoritesMenu = m.addSubMenu(R.string.favorites);
-        this.favoritesMenu.add("tmp");
-
         this.categoriesMenu  = m.addSubMenu(R.string.categories);
-        this.categoriesMenu.add("tmp");
-
         this.feedsMenu  = m.addSubMenu(R.string.feeds);
-        this.feedsMenu.add("tmp");
 
         //liste
         mContext = this;
@@ -231,6 +227,7 @@ public class InformationActivity extends AppCompatActivity
             }
         });
 
+        adapterNews.notifyDataSetChanged();
     }
 
     public void refreshListViews() {
@@ -254,5 +251,24 @@ public class InformationActivity extends AppCompatActivity
                 viewPager.setCurrentItem(index, true);
             }
         });
+    }
+
+    public void refreshNavigationMenu(List<Feed> feeds) {
+        this.favoritesMenu.clear();
+        this.categoriesMenu.clear();
+        this.feedsMenu.clear();
+
+        for(Feed feed : feeds) {
+            if(feed.isFavorite()) {
+                this.favoritesMenu.add(feed.getTitle());
+            }
+            this.feedsMenu.add(feed.getTitle());
+        }
+
+        for(Category category : Category.values()) {
+            this.categoriesMenu.add(category.getValue());
+        }
+
+
     }
 }
