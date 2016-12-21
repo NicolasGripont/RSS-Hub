@@ -1,8 +1,10 @@
 package com.nico.rsshub.views;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -12,6 +14,7 @@ import android.view.MenuItem;
 import android.view.SubMenu;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -23,35 +26,26 @@ import com.nico.rsshub.modeles.Information;
 
 import java.io.FileOutputStream;
 import java.util.List;
+import java.util.Vector;
 
 public class InformationActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    ListView listViewNews;
+    private SubMenu favoritesMenu;
 
-    ListView listViewNewsFavorites;
+    private SubMenu categoriesMenu;
 
-    ListView listViewChrono;
+    private SubMenu feedsMenu;
 
-    ListView listViewChronoFavorites;
+    private Context mContext;
 
-    TabHost tabHost;
+    private ListView listViewNews;
 
-    LinearLayout tabNews;
+    private ListView listViewNewsFavorites;
 
-    LinearLayout tabNewsFavorites;
+    private ListView listViewChrono;
 
-    LinearLayout tabChrono;
-
-    LinearLayout tabChronoFavorites;
-
-
-    SubMenu favoritesMenu;
-
-    SubMenu categoriesMenu;
-
-    SubMenu feedsMenu;
-
+    private ListView listViewChronoFavorites;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,57 +79,35 @@ public class InformationActivity extends AppCompatActivity
         this.feedsMenu.add("tmp");
 
         //liste
-        this.listViewNews = (ListView) findViewById(R.id.listView_news);
-        this.listViewNewsFavorites = (ListView) findViewById(R.id.listView_news_favorites);
-        this.listViewChrono = (ListView) findViewById(R.id.listView_chrono);
-        this.listViewChronoFavorites = (ListView) findViewById(R.id.listView_chrono_favorites);
+        mContext = this;
+        this.listViewNews = new ListView(mContext);
+        this.listViewNewsFavorites = new ListView(mContext);
+        this.listViewChrono = new ListView(mContext);
+        this.listViewChronoFavorites = new ListView(mContext);
 
-        this.tabHost = (TabHost) findViewById(R.id.tabHost);
-        this.tabHost.setup();
+        Vector<View> pages = new Vector<>();
+        Vector<String> titles = new Vector<>();
+        pages.add(listViewNews);
+        titles.add(getString(R.string.news));
+        pages.add(listViewNewsFavorites);
+        titles.add(getString(R.string.favorites));
+        pages.add(listViewChrono);
+        titles.add(getString(R.string.chrono));
+        pages.add(listViewChronoFavorites);
+        titles.add(getString(R.string.chrono_favorites));
 
-        //Tabs
+        ViewPager vp = (ViewPager) findViewById(R.id.viewpager);
+        CustomPagerAdapter adapter = new CustomPagerAdapter(mContext,pages,titles);
+        vp.setAdapter(adapter);
+        vp.setOffscreenPageLimit(4);
 
-        //Tab News
-        TabHost.TabSpec specNews = this.tabHost.newTabSpec(getString(R.string.news));
-        specNews.setContent(R.id.tab_news);
-        specNews.setIndicator(getString(R.string.news));
-        this.tabHost.addTab(specNews);
-
-        //Tab News Favorites
-        TabHost.TabSpec specNewsFavorites = this.tabHost.newTabSpec(getString(R.string.favorites));
-        specNewsFavorites.setContent(R.id.tab_news_favorites);
-        specNewsFavorites.setIndicator(getString(R.string.favorites));
-        this.tabHost.addTab(specNewsFavorites);
-
-        //Tab Chrono
-        TabHost.TabSpec specChrono = this.tabHost.newTabSpec(getString(R.string.chrono));
-        specChrono.setContent(R.id.tab_chrono);
-        specChrono.setIndicator(getString(R.string.chrono));
-        this.tabHost.addTab(specChrono);
-
-        //Tab Chrono Favorites
-        TabHost.TabSpec specChronoFavorites = this.tabHost.newTabSpec(getString(R.string.chrono_favorites));
-        specChronoFavorites.setContent(R.id.tab_chrono_favorites);
-        specChronoFavorites.setIndicator(getString(R.string.chrono_favorites));
-        this.tabHost.addTab(specChronoFavorites);
-
-        //TODO : modifier taille titre tab (et modifier le style)
-//        LinearLayout.LayoutParams params0 = (LinearLayout.LayoutParams)tabHost.getTabWidget().getChildAt(0).getLayoutParams();
-//        params0.width = 500;
-//        tabHost.getTabWidget().getChildAt(0).setLayoutParams(params0);
-//
-//        LinearLayout.LayoutParams params1 = (LinearLayout.LayoutParams)tabHost.getTabWidget().getChildAt(1).getLayoutParams();
-//        params1.width = 500;
-//        tabHost.getTabWidget().getChildAt(1).setLayoutParams(params1);
-//
-//        LinearLayout.LayoutParams params2 = (LinearLayout.LayoutParams)tabHost.getTabWidget().getChildAt(2).getLayoutParams();
-//        params2.width = 500;
-//        tabHost.getTabWidget().getChildAt(2).setLayoutParams(params2);
-//
-//        LinearLayout.LayoutParams params3 = (LinearLayout.LayoutParams)tabHost.getTabWidget().getChildAt(3).getLayoutParams();
-//        params3.width = 500;
-//        tabHost.getTabWidget().getChildAt(3).setLayoutParams(params3);
-
+        String[] prenoms = new String[]{
+                "Antoine", "Benoit", "Cyril", "David", "Eloise", "Florent",
+                "Gerard", "Hugo", "Ingrid", "Jonathan", "Kevin", "Logan",
+                "Mathieu", "Noemie", "Olivia", "Philippe", "Quentin", "Romain",
+                "Sophie", "Tristan", "Ulric", "Vincent", "Willy", "Xavier",
+                "Yann", "Zoé"
+        };
 
         Controller.getInstance().setCurrentActivity(this);
         Controller.getInstance().updateInformations();
@@ -158,21 +130,6 @@ public class InformationActivity extends AppCompatActivity
         return true;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-//        if (id == R.id.action_settings) {
-//            return true;
-//        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -182,26 +139,11 @@ public class InformationActivity extends AppCompatActivity
         if(id == R.id.nav_manage_feeds) {
             Controller.getInstance().onMannageFeedsClicked();
         }
-//        if (id == R.id.nav_camera) {
-//            // Handle the camera action
-//        } else if (id == R.id.nav_gallery) {
-//
-//        } else if (id == R.id.nav_slideshow) {
-//
-//        } else if (id == R.id.nav_manage) {
-//
-//        } else if (id == R.id.nav_share) {
-//
-//        } else if (id == R.id.nav_send) {
-//
-//        }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-
-
 
     public void updateInformations(final List<Information> all, final List<Information> favorites) {
         InformationAdapter adapterNews = new InformationAdapter(this, all, true);
