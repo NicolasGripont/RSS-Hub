@@ -1,6 +1,8 @@
 package com.nico.rsshub.views;
 
+import android.annotation.TargetApi;
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -16,6 +18,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TabHost;
@@ -39,6 +42,8 @@ public class InformationActivity extends AppCompatActivity
 
     private Context mContext;
 
+    private ViewPager viewPager;
+
     private ListView listViewNews;
 
     private ListView listViewNewsFavorites;
@@ -47,6 +52,15 @@ public class InformationActivity extends AppCompatActivity
 
     private ListView listViewChronoFavorites;
 
+    private Button newsButton;
+
+    private Button newsFavoritesButton;
+
+    private Button chronoButton;
+
+    private Button chronoFavoritesButton;
+
+    @TargetApi(Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -87,27 +101,62 @@ public class InformationActivity extends AppCompatActivity
 
         Vector<View> pages = new Vector<>();
         Vector<String> titles = new Vector<>();
+        final Vector<Button> buttons = new Vector<>();
         pages.add(listViewNews);
         titles.add(getString(R.string.news));
+        newsButton = (Button)findViewById(R.id.news_button);
+        newsButton.setText(getString(R.string.news));
+        this.initButtonClickListener(newsButton,0);
+        buttons.add(newsButton);
+        newsButton.setTextColor(getColor(R.color.orange));
+
+
         pages.add(listViewNewsFavorites);
         titles.add(getString(R.string.favorites));
+        newsFavoritesButton = (Button)findViewById(R.id.news_favorites_button);
+        newsFavoritesButton.setText(getString(R.string.favorites));
+        this.initButtonClickListener(newsFavoritesButton,1);
+        buttons.add(newsFavoritesButton);
+
         pages.add(listViewChrono);
         titles.add(getString(R.string.chrono));
+        chronoButton = (Button)findViewById(R.id.chrono_button);
+        chronoButton.setText(getString(R.string.chrono));
+        this.initButtonClickListener(chronoButton,2);
+        buttons.add(chronoButton);
+
         pages.add(listViewChronoFavorites);
         titles.add(getString(R.string.chrono_favorites));
+        chronoFavoritesButton = (Button)findViewById(R.id.chrono_favorites_button);
+        chronoFavoritesButton.setText(getString(R.string.chrono_favorites));
+        this.initButtonClickListener(chronoFavoritesButton,3);
+        buttons.add(chronoFavoritesButton);
 
-        ViewPager vp = (ViewPager) findViewById(R.id.viewpager);
+        viewPager = (ViewPager) findViewById(R.id.viewpager);
         CustomPagerAdapter adapter = new CustomPagerAdapter(mContext,pages,titles);
-        vp.setAdapter(adapter);
-        vp.setOffscreenPageLimit(4);
+        viewPager.setAdapter(adapter);
+        viewPager.setOffscreenPageLimit(pages.size());
 
-        String[] prenoms = new String[]{
-                "Antoine", "Benoit", "Cyril", "David", "Eloise", "Florent",
-                "Gerard", "Hugo", "Ingrid", "Jonathan", "Kevin", "Logan",
-                "Mathieu", "Noemie", "Olivia", "Philippe", "Quentin", "Romain",
-                "Sophie", "Tristan", "Ulric", "Vincent", "Willy", "Xavier",
-                "Yann", "Zoé"
-        };
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @TargetApi(Build.VERSION_CODES.M)
+            @Override
+            public void onPageSelected(int position) {
+                for(Button button :buttons) {
+                    button.setTextColor(getColor(R.color.white));
+                }
+                buttons.get(position).setTextColor(getColor(R.color.orange));
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
 
         Controller.getInstance().setCurrentActivity(this);
         Controller.getInstance().updateInformations();
@@ -189,5 +238,21 @@ public class InformationActivity extends AppCompatActivity
         ((BaseAdapter) listViewChrono.getAdapter()).notifyDataSetChanged();
         ((BaseAdapter) listViewNewsFavorites.getAdapter()).notifyDataSetChanged();
         ((BaseAdapter) listViewChronoFavorites.getAdapter()).notifyDataSetChanged();
+    }
+
+    public void initButtonClickListener(Button button, final int index) {
+        button.setOnClickListener(new View.OnClickListener() {
+            @TargetApi(Build.VERSION_CODES.M)
+            @Override
+            public void onClick(View v) {
+                Button button = (Button) v;
+                newsButton.setTextColor(getColor(R.color.white));
+                newsFavoritesButton.setTextColor(getColor(R.color.white));
+                chronoButton.setTextColor(getColor(R.color.white));
+                chronoFavoritesButton.setTextColor(getColor(R.color.white));
+                button.setTextColor(getColor(R.color.orange));
+                viewPager.setCurrentItem(index, true);
+            }
+        });
     }
 }
