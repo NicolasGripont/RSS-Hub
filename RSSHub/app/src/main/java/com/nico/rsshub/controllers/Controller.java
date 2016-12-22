@@ -42,6 +42,10 @@ public class Controller {
     private Semaphore mutexFeeds = null;
     private Semaphore mutexImages = null;
 
+    private List<Feed> selectedFeeds = null;
+    private boolean isManageFeedsMode = false;
+
+
     public static Controller getInstance() {
         if(instance == null) {
             Controller.instance = new Controller();
@@ -57,6 +61,7 @@ public class Controller {
         mutexFeeds = new Semaphore(1);
         mutexImages = new Semaphore(1);
         feedsList = new ArrayList<>();
+        selectedFeeds = new ArrayList<>();
     }
 
     public List<Information> getInformationList() { return informationList; }
@@ -78,6 +83,8 @@ public class Controller {
     }
 
     public List<Feed> getFeedsList() { return feedsList; }
+
+    public List<Feed> getSelectedFeeds() { return selectedFeeds; }
 
     public void setCurrentActivity(Activity activity) {
         if(activity.getClass().equals(SplashActivity.class)) {
@@ -226,6 +233,122 @@ public class Controller {
         for(Information information : this.informationList) {
             if(information.getFeed().isFavorite()){
                 favorites.add(information);
+            }
+        }
+    }
+
+    public void setManageFeedsMode(boolean isManageFeedsMode) {
+        if(this.currentActivity != null) {
+            if(this.currentActivity == this.manageFeedsActivity) {
+                if(!this.isManageFeedsMode) {
+                    this.manageFeedsActivity.showActionMode();
+                }
+                if(!isManageFeedsMode){
+                    this.selectedFeeds.clear();
+                }
+                this.isManageFeedsMode = isManageFeedsMode;
+                this.manageFeedsActivity.setManageFeedsMode(isManageFeedsMode);
+                this.manageFeedsActivity.updateListView();
+            }
+        }
+    }
+
+    public void selectFeed(int position) {
+        if(this.currentActivity != null) {
+            if(this.currentActivity == this.manageFeedsActivity) {
+                if(this.isManageFeedsMode) {
+                    if(!this.selectedFeeds.contains(feedsList.get(position))) {
+                        this.selectedFeeds.add(feedsList.get(position));
+                    } else {
+                        this.selectedFeeds.remove(feedsList.get(position));
+                    }
+
+                    if(this.selectedFeeds.size() == 0) {
+                        this.manageFeedsActivity.setModifyingItemVisibility(false);
+                        this.manageFeedsActivity.setDeletingItemVisibility(false);
+                    } else if(this.selectedFeeds.size() == 1) {
+                        this.manageFeedsActivity.setModifyingItemVisibility(true);
+                        this.manageFeedsActivity.setDeletingItemVisibility(true);
+                    } else {
+                        this.manageFeedsActivity.setModifyingItemVisibility(false);
+                        this.manageFeedsActivity.setDeletingItemVisibility(true);
+                    }
+
+                    this.manageFeedsActivity.setSelectAllItemIcon(this.selectedFeeds.size() == this.feedsList.size());
+
+                    this.manageFeedsActivity.updateListView();
+                }
+            }
+        }
+    }
+
+    public void selectAllFeeds() {
+        if(this.currentActivity != null) {
+            if (this.currentActivity == this.manageFeedsActivity) {
+                if (this.isManageFeedsMode) {
+
+                    if (this.selectedFeeds.size() < this.feedsList.size()) {
+                        this.selectedFeeds.clear();
+                        this.selectedFeeds.addAll(this.feedsList);
+                    } else {
+                        this.selectedFeeds.clear();
+                    }
+
+                    if(this.selectedFeeds.size() == 0) {
+                        this.manageFeedsActivity.setModifyingItemVisibility(false);
+                        this.manageFeedsActivity.setDeletingItemVisibility(false);
+                        this.manageFeedsActivity.setSelectAllItemIcon(false);
+                    } else {
+                        this.manageFeedsActivity.setModifyingItemVisibility(false);
+                        this.manageFeedsActivity.setDeletingItemVisibility(true);
+                        this.manageFeedsActivity.setSelectAllItemIcon(true);
+                    }
+
+                    this.manageFeedsActivity.updateListView();
+                }
+            }
+        }
+    }
+
+
+    public void onDeleteButtonClicked() {
+        if(this.currentActivity != null) {
+            if (this.currentActivity == this.manageFeedsActivity) {
+                if (this.isManageFeedsMode) {
+                    this.manageFeedsActivity.showDeleteAlertDialog(this.selectedFeeds.size());
+                }
+            }
+        }
+    }
+
+    public void deleteSelectedFeeds() {
+        if(this.currentActivity != null) {
+            if (this.currentActivity == this.manageFeedsActivity) {
+                if (this.isManageFeedsMode) {
+                    feedsList.removeAll(selectedFeeds);
+
+                    for(Feed feed : selectedFeeds) {
+                        List<Information> informations = feeds.get(feed);
+                        feeds.remove(feed);
+                        for(Information information : informations) {
+                            images.remove(information);
+                        }
+                        favorites.removeAll(informations);
+                        informationList.removeAll(informations);
+                    }
+
+                    selectedFeeds.clear();
+
+                    if(this.feedsList.size() == 0) {
+                        this.manageFeedsActivity.finishActionMode();
+                    } else {
+                        this.manageFeedsActivity.setModifyingItemVisibility(false);
+                        this.manageFeedsActivity.setDeletingItemVisibility(false);
+                        this.manageFeedsActivity.setSelectAllItemIcon(false);
+                    }
+
+                    this.manageFeedsActivity.updateListView();
+                }
             }
         }
     }

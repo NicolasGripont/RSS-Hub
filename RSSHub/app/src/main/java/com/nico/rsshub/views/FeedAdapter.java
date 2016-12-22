@@ -30,19 +30,29 @@ import java.util.Locale;
 public class FeedAdapter extends BaseAdapter {
     private List<Feed> feeds;
 
+    private List<Feed> selectedFeeds;
+
     private Context context;
+
+    private boolean isManageFeedsMode;
 
     private LayoutInflater layoutInflater;
 
-    public FeedAdapter(Context context, List<Feed> feeds) {
+    public FeedAdapter(Context context, List<Feed> feeds, List<Feed>selectedFeeds) {
         this.context = context;
         this.feeds = feeds;
+        this.selectedFeeds = selectedFeeds;
         this.layoutInflater = LayoutInflater.from(context);
+        this.isManageFeedsMode = false;
     }
 
     public List<Feed> getFeeds() {
         return feeds;
     }
+
+    public boolean isManageFeedsMode() { return isManageFeedsMode; }
+
+    public void setManageFeedsMode(boolean manageFeedsMode) { isManageFeedsMode = manageFeedsMode; }
 
     public int getCount() {
         return feeds.size();
@@ -78,18 +88,34 @@ public class FeedAdapter extends BaseAdapter {
         feed_title.setText(feeds.get(position).getTitle());
         feed_category.setText(feeds.get(position).getCategory().getValue());
         feed_url.setText(feeds.get(position).getUrl());
-        if(feeds.get(position).isFavorite()) {
-            feed_isFavorite_ImageView.setImageResource(R.mipmap.yellow_star);
+
+        if(!isManageFeedsMode) {
+            if (feeds.get(position).isFavorite()) {
+                feed_isFavorite_ImageView.setImageResource(R.mipmap.yellow_star);
+            } else {
+                feed_isFavorite_ImageView.setImageResource(R.mipmap.gray_star);
+            }
+
+            feed_isFavorite_ImageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Controller.getInstance().onFavoriteButtonClicked(feeds.get(position));
+                }
+            });
         } else {
-            feed_isFavorite_ImageView.setImageResource(R.mipmap.gray_star);
+            if (selectedFeeds.contains(feeds.get(position))) {
+                feed_isFavorite_ImageView.setImageResource(R.mipmap.check_orange);
+            } else {
+                feed_isFavorite_ImageView.setImageResource(R.mipmap.uncheck_orange);
+            }
+            feed_isFavorite_ImageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Controller.getInstance().selectFeed(position);
+                }
+            });
         }
 
-        feed_isFavorite_ImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Controller.getInstance().onFavoriteButtonClicked(feeds.get(position));
-            }
-        });
 
         //On retourne l'item créé.
         return layoutItem;

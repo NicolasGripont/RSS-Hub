@@ -26,4 +26,9 @@
     <string name="title_activity_manage_feeds">ManageFeedsActivity</string>
     <string name="title_activity_information_detail">InformationDetailActivity</string>
 
+    <string name="delete">Supprimer</string>
+    <string name="modify">Modifier</string>
+    <string name="selectAll">Tout sélectionner</string>
+    <string name="deselectAll">Tout désélectionner</string>
+
 </resources>

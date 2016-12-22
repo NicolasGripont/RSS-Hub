@@ -16,12 +16,9 @@ import android.view.MenuItem;
 import android.view.SubMenu;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.TabHost;
 
 import com.nico.rsshub.R;
 import com.nico.rsshub.controllers.Controller;
@@ -29,7 +26,6 @@ import com.nico.rsshub.modeles.Category;
 import com.nico.rsshub.modeles.Feed;
 import com.nico.rsshub.modeles.Information;
 
-import java.io.FileOutputStream;
 import java.util.List;
 import java.util.Vector;
 
@@ -94,6 +90,12 @@ public class InformationActivity extends AppCompatActivity
         this.listViewNewsFavorites = new ListView(mContext);
         this.listViewChrono = new ListView(mContext);
         this.listViewChronoFavorites = new ListView(mContext);
+        this.listViewNews.setDividerHeight(30);
+        this.listViewNews.setDividerHeight(30);
+        this.listViewNewsFavorites.setDividerHeight(30);
+        this.listViewChrono.setDividerHeight(30);
+        this.listViewChronoFavorites.setDividerHeight(30);
+
 
         Vector<View> pages = new Vector<>();
         Vector<String> titles = new Vector<>();
