@@ -31,4 +31,8 @@
     <string name="selectAll">Tout sélectionner</string>
     <string name="deselectAll">Tout désélectionner</string>
 
+    <string name="delete_this_feed_question">Supprimer ce feed?</string>
+    <string name="delete_these_feeds_question">Supprimer ces feeds?</string>
+    <string name="cancel">Annuler</string>
+
 </resources>

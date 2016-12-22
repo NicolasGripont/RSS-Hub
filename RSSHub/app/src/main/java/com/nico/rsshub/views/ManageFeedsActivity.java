@@ -127,7 +127,7 @@ public class ManageFeedsActivity extends AppCompatActivity {
                         Controller.getInstance().onDeleteButtonClicked();
                         return true;
                     case R.id.action_modify:
-
+                        Controller.getInstance().onModifyButtonClicked();
                         return true;
                     case R.id.action_select_all:
                         Controller.getInstance().selectAllFeeds();
@@ -179,24 +179,25 @@ public class ManageFeedsActivity extends AppCompatActivity {
 
     public void showDeleteAlertDialog(int nbFeeds) {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(ManageFeedsActivity.this);
-        alertDialogBuilder.setTitle("Suppression");
-        if(nbFeeds == 1) {
-            alertDialogBuilder.setMessage("Supprimer ce feed ?");
-        } else {
-            alertDialogBuilder.setMessage("Supprimer ces feeds ?");
-        }
-        alertDialogBuilder.setPositiveButton("Annuler",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
 
-                    }
-                });
-        alertDialogBuilder.setNegativeButton("Supprimer",
+        if(nbFeeds == 1) {
+            alertDialogBuilder.setTitle(R.string.delete_this_feed_question);
+        } else {
+            alertDialogBuilder.setTitle(R.string.delete_these_feeds_question);
+        }
+        alertDialogBuilder.setPositiveButton(R.string.delete,
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         Controller.getInstance().deleteSelectedFeeds();
                     }
                 });
+        alertDialogBuilder.setNegativeButton(R.string.cancel,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                });
         alertDialogBuilder.show();
     }
+
+    
 }

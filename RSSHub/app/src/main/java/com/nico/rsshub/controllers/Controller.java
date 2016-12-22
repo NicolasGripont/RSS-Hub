@@ -211,14 +211,6 @@ public class Controller {
         }
     }
 
-    public void onPlusButtonClicked() {
-        if(this.currentActivity != null) {
-            if (this.currentActivity == this.manageFeedsActivity) {
-
-            }
-        }
-    }
-
     public void onFavoriteButtonClicked(Feed feed) {
         if(this.currentActivity != null) {
             if (this.currentActivity == this.manageFeedsActivity) {
@@ -349,6 +341,30 @@ public class Controller {
 
                     this.manageFeedsActivity.updateListView();
                 }
+            }
+        }
+    }
+
+    public void onPlusButtonClicked() {
+        if(this.currentActivity != null) {
+            if (this.currentActivity == this.manageFeedsActivity) {
+                this.selectedFeeds.clear();
+                if(this.isManageFeedsMode) {
+                    this.isManageFeedsMode = false;
+                    this.manageFeedsActivity.setManageFeedsMode(false);
+                    this.manageFeedsActivity.finishActionMode();
+                }
+                //TODO afficher vue ajout
+                //TODO ajouter refressh this.manageFeedsActivity.updateListView(); lors du retour a la liste des feeds
+            }
+        }
+    }
+
+    public void onModifyButtonClicked() {
+        if(this.currentActivity != null) {
+            if (this.currentActivity == this.manageFeedsActivity) {
+                //TODO afficher vue modifier
+                //TODO ajouter refressh this.manageFeedsActivity.updateListView(); lors du retour a la liste des feeds
             }
         }
     }
