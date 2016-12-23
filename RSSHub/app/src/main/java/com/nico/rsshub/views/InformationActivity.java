@@ -270,6 +270,7 @@ public class InformationActivity extends AppCompatActivity
         for(Category category : Category.values()) {
             this.categoriesMenu.add(category.getValue());
         }
+
     }
 
 }

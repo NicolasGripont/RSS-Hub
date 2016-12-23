@@ -19,6 +19,7 @@ public enum Category {
     CULTURE(R.string.culture),
     ECOLOGY(R.string.ecology),
     MULTIMEDIA(R.string.multimedia),
+    INFORMATION(R.string.information),
     OTHER(R.string.other);
 
     private final int value;

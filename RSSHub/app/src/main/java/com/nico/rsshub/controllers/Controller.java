@@ -404,7 +404,6 @@ public class Controller {
                     this.addFeedTask = new AddFeedTask();
                     this.addFeedTask.execute(this.newFeed);
                 } else {
-
                 }
             }
         }
