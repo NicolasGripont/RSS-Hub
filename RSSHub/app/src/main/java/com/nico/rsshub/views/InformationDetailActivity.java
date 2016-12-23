@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 
 import com.nico.rsshub.R;
 import com.nico.rsshub.controllers.Controller;
@@ -51,7 +52,9 @@ public class InformationDetailActivity extends AppCompatActivity {
     }
 
     public void loadUrl(String url) {
+        this.webView.setWebViewClient(new WebViewClient());
         this.webView.loadUrl(url);
+        System.out.println(url);
     }
 
     @Override
