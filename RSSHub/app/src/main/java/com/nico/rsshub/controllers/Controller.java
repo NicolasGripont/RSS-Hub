@@ -8,6 +8,7 @@ import android.widget.AdapterView;
 import com.nico.rsshub.modeles.Category;
 import com.nico.rsshub.modeles.Feed;
 import com.nico.rsshub.modeles.Information;
+import com.nico.rsshub.services.FeedManager;
 import com.nico.rsshub.views.AddFeedActivity;
 import com.nico.rsshub.views.InformationActivity;
 import com.nico.rsshub.views.InformationDetailActivity;
@@ -108,21 +109,24 @@ public class Controller {
     public void loadInformations(){
         LoadFeedsTask loadFeedsTask = new LoadFeedsTask();
 
-        final Feed feed1 = new Feed();
-        feed1.setUrl("http://www.lequipe.fr/rss/actu_rss.xml");
-        feed1.setTitle("L'Equipe");
-        feed1.setCategory(Category.SPORT);
-        feed1.setCacheFileName(createCacheFileName(feed1.getTitle(),feed1.getUrl()));
-        feed1.setFavorite(true);
-
-        final Feed feed2 = new Feed();
-        feed2.setUrl("http://korben.info/feed");
-        feed2.setTitle("Korben");
-        feed2.setCategory(Category.COMPUTING);
-        feed2.setCacheFileName(createCacheFileName(feed2.getTitle(),feed2.getUrl()));
-
+//        final Feed feed1 = new Feed();
+//        feed1.setUrl("http://www.lequipe.fr/rss/actu_rss.xml");
+//        feed1.setTitle("L'Equipe");
+//        feed1.setCategory(Category.SPORT);
+//        feed1.setCacheFileName(createCacheFileName(feed1.getTitle(),feed1.getUrl()));
+//        feed1.setFavorite(true);
+//
+//        final Feed feed2 = new Feed();
+//        feed2.setUrl("http://korben.info/feed");
+//        feed2.setTitle("Korben");
+//        feed2.setCategory(Category.COMPUTING);
+//        feed2.setCacheFileName(createCacheFileName(feed2.getTitle(),feed2.getUrl()));
+//
 //        feedsList.add(feed1);
-        feedsList.add(feed2);
+//        feedsList.add(feed2);
+//
+//        FeedManager.writeFeeds(this.currentActivity.getApplicationContext(),feedsList);
+        this.feedsList = FeedManager.readFeeds(this.currentActivity.getApplicationContext());
 
         Feed[] feeds = new Feed[feedsList.size()];
         for(int i = 0; i < feedsList.size(); i++) {
@@ -136,7 +140,6 @@ public class Controller {
         if(this.currentActivity == this.informationActivity && this.informationActivity != null) {
             Information information = (Information) adapter.getItemAtPosition(position);
             Intent intent = new Intent(this.informationActivity, InformationDetailActivity.class);
-            intent.putExtra("information", information);
             this.informationActivity.startActivity(intent);
             LoadInformationDetailTask loadInformationDetailTask = new LoadInformationDetailTask();
             loadInformationDetailTask.execute(information.getUrl());
@@ -225,6 +228,7 @@ public class Controller {
         if(this.currentActivity != null) {
             if (this.currentActivity == this.manageFeedsActivity) {
                 feed.setFavorite(!feed.isFavorite());
+                FeedManager.writeFeeds(this.currentActivity.getApplicationContext(),feedsList);
                 this.manageFeedsActivity.refreshListViewFeeds();
             }
         }
@@ -331,14 +335,16 @@ public class Controller {
 
                     for(Feed feed : selectedFeeds) {
                         List<Information> informations = feeds.get(feed);
-                        feeds.remove(feed);
-                        for(Information information : informations) {
-                            images.remove(information);
+                        if(informations != null) {
+                            for (Information information : informations) {
+                                images.remove(information);
+                                favorites.removeAll(informations);
+                                informationList.removeAll(informations);
+                            }
                         }
-                        favorites.removeAll(informations);
-                        informationList.removeAll(informations);
+                        feeds.remove(feed);
                     }
-
+                    FeedManager.writeFeeds(this.currentActivity.getApplicationContext(),feedsList);
                     selectedFeeds.clear();
 
                     if(this.feedsList.size() == 0) {
@@ -443,6 +449,7 @@ public class Controller {
                 });
                 this.images.putAll(newImages);
                 this.feeds.put(newFeed,newInformationList);
+                FeedManager.writeFeeds(this.currentActivity.getApplicationContext(),feedsList);
             }
         }
     }

@@ -67,6 +67,8 @@ public class LoadFeedThread extends Thread {
 
     public Map<Information, Bitmap> getImages() { return images; }
 
+    public Feed getFeed() { return feed; }
+
     @Override
     public void run() {
         super.run();

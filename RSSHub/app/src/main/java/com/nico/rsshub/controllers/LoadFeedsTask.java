@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.zip.CheckedOutputStream;
 
 /**
  * Created by Nico on 13/12/2016.
@@ -56,6 +57,7 @@ public class LoadFeedsTask extends AsyncTask<Feed, Integer, String> {
                 if(loadFeedThread.getInformationList() != null && !loadFeedThread.getInformationList().isEmpty()) {
                     Controller.getInstance().getInformationList().addAll(loadFeedThread.getInformationList());
                     Controller.getInstance().getImages().putAll(loadFeedThread.getImages());
+                    Controller.getInstance().getFeeds().put(loadFeedThread.getFeed(),loadFeedThread.getInformationList());
                 }
             } catch (InterruptedException e) {
             }
@@ -74,6 +76,7 @@ public class LoadFeedsTask extends AsyncTask<Feed, Integer, String> {
         });
 
         Controller.getInstance().updateFavorites();
+
 
         if(Controller.getInstance().getInformationList().size() != 0) {
             Controller.getInstance().showInformationActivity();
