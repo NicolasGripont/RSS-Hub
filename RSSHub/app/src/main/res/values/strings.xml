@@ -35,4 +35,9 @@
     <string name="delete_these_feeds_question">Supprimer ces feeds?</string>
     <string name="cancel">Annuler</string>
 
+    <string name="title_activity_add_feed">Ajouter un Feed</string>
+    <string name="title">Titre</string>
+    <string name="url">URL</string>
+    <string name="category">Catégorie</string>
+
 </resources>

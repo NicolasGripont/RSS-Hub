@@ -8,6 +8,7 @@ import android.widget.AdapterView;
 import com.nico.rsshub.modeles.Category;
 import com.nico.rsshub.modeles.Feed;
 import com.nico.rsshub.modeles.Information;
+import com.nico.rsshub.views.AddFeedActivity;
 import com.nico.rsshub.views.InformationActivity;
 import com.nico.rsshub.views.InformationDetailActivity;
 import com.nico.rsshub.views.ManageFeedsActivity;
@@ -32,6 +33,7 @@ public class Controller {
     private InformationActivity informationActivity = null;
     private InformationDetailActivity informationDetailActivity = null;
     private ManageFeedsActivity manageFeedsActivity = null;
+    private AddFeedActivity addFeedActivity = null;
 
     private Activity currentActivity = null;
     private List<Information> informationList = null;
@@ -44,6 +46,8 @@ public class Controller {
 
     private List<Feed> selectedFeeds = null;
     private boolean isManageFeedsMode = false;
+
+    private Feed newFeed = null;
 
 
     public static Controller getInstance() {
@@ -98,6 +102,9 @@ public class Controller {
             this.currentActivity = activity;
         } else if(activity.getClass().equals(ManageFeedsActivity.class)) {
             this.manageFeedsActivity = (ManageFeedsActivity) activity;
+            this.currentActivity = activity;
+        } else if(activity.getClass().equals(AddFeedActivity.class)) {
+            this.addFeedActivity = (AddFeedActivity) activity;
             this.currentActivity = activity;
         } else {
             this.currentActivity = null;
@@ -207,6 +214,12 @@ public class Controller {
                 this.updateFavorites();
                 this.informationActivity.refreshListViews();
                 this.informationActivity.refreshNavigationMenu(this.feedsList);
+            } else if(this.currentActivity == this.addFeedActivity) {
+                this.setCurrentActivity(this.manageFeedsActivity);
+                this.addFeedActivity.finish();
+                this.addFeedActivity = null;
+                this.manageFeedsActivity.refreshListViewFeeds();
+                this.newFeed = null;
             }
         }
     }
@@ -354,6 +367,11 @@ public class Controller {
                     this.manageFeedsActivity.setManageFeedsMode(false);
                     this.manageFeedsActivity.finishActionMode();
                 }
+
+                Intent intent = new Intent(this.manageFeedsActivity, AddFeedActivity.class);
+                this.manageFeedsActivity.startActivity(intent);
+                this.newFeed = new Feed();
+
                 //TODO afficher vue ajout
                 //TODO ajouter refressh this.manageFeedsActivity.updateListView(); lors du retour a la liste des feeds
             }

@@ -67,17 +67,10 @@ public class ManageFeedsActivity extends AppCompatActivity {
         this.feedAdapter = new FeedAdapter(this, Controller.getInstance().getFeedsList(),Controller.getInstance().getSelectedFeeds());
         listViewFeeds.setAdapter(feedAdapter);
 
-        listViewFeeds.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapter, View view, int position, long arg3) {
-//                Controller.getInstance().onInformationClick(adapter,position);
-            }
-        });
         listViewFeeds.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 Controller.getInstance().setManageFeedsMode(true);
-//                Controller.getInstance().selectFeed(position);
                 return false;
             }
         });

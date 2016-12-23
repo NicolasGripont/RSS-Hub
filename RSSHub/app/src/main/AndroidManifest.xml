@@ -32,6 +32,10 @@
         <activity
             android:name=".views.InformationDetailActivity"
             android:label="@string/title_activity_information_detail"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".views.AddFeedActivity"
+            android:label="@string/title_activity_add_feed"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
