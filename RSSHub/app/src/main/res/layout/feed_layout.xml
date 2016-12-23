@@ -22,7 +22,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/feed_title"
-                android:layout_weight="1"
                 android:textColor="@android:color/white"
                 android:textAllCaps="false"
                 android:background="@android:color/black"
@@ -41,7 +40,8 @@
                 android:paddingTop="5dp"
                 android:textAlignment="center"
                 android:textSize="18sp"
-                android:text="Title" />
+                android:text="Title"
+                android:layout_weight="0.11" />
 
             <TextView
                 android:text="Category"
@@ -54,11 +54,10 @@
                 android:layout_marginLeft="10dp" />
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="34dp"
+                android:layout_height="34dp"
                 app:srcCompat="@mipmap/gray_star"
                 android:id="@+id/feed_isFavorite_imageView"
-                android:layout_weight="1"
                 android:scaleType="fitEnd" />
 
         </LinearLayout>

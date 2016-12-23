@@ -138,7 +138,7 @@ public class AddFeedActivity extends AppCompatActivity {
     public void showLoadFeedAlertDialog() {
         InputMethodManager inputMethodManager = (InputMethodManager)getSystemService(this.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(this.findViewById(R.id.linearLayout).getWindowToken(), 0);
-    
+
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(AddFeedActivity.this);
 
         alertDialogBuilder.setTitle(R.string.add_feed_please_wait);

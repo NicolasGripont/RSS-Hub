@@ -15,6 +15,8 @@ import com.nico.rsshub.views.ManageFeedsActivity;
 import com.nico.rsshub.views.SplashActivity;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -428,6 +430,17 @@ public class Controller {
             if (this.currentActivity == this.addFeedActivity) {
                 this.feedsList.add(newFeed);
                 this.informationList.addAll(newInformationList);
+                Collections.sort(this.informationList, new Comparator<Information>() {
+                    @Override
+                    public int compare(Information lhs, Information rhs) {
+                        if(lhs.getDatePublication().getTime() - rhs.getDatePublication().getTime() > 0) {
+                            return -1;
+                        } else if (lhs.getDatePublication().getTime() - rhs.getDatePublication().getTime() == 0) {
+                            return 0;
+                        }
+                        return 1;
+                    }
+                });
                 this.images.putAll(newImages);
                 this.feeds.put(newFeed,newInformationList);
             }

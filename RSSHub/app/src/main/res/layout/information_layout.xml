@@ -24,7 +24,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/information_feed"
-            android:layout_weight="1"
+            android:layout_weight="0.53"
             android:textColor="@android:color/white"
             android:textAllCaps="false"
             android:background="@android:color/black"
@@ -43,7 +43,8 @@
             android:paddingTop="5dp"
             android:textAlignment="center"
             android:textSize="18sp"
-            android:textStyle="normal|bold" />
+            android:textStyle="normal|bold"
+            android:text="Titre" />
 
         <TextView
             android:text="TextView"
