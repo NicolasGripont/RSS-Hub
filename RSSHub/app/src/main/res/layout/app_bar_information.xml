@@ -30,33 +30,41 @@
                 android:orientation="horizontal" >
 
                 <Button
-                    android:text="Button"
+                    android:text="@string/news"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/news_button"
-                    android:background="@color/colorPrimary" />
+                    android:background="@color/colorPrimary"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp" />
 
                 <Button
-                    android:text="Button"
+                    android:text="@string/favorites"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/news_favorites_button"
-                    android:background="@color/colorPrimary" />
+                    android:background="@color/colorPrimary"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp" />
 
                 <Button
-                    android:text="Button"
+                    android:text="@string/chrono"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/chrono_button"
-                    android:background="@color/colorPrimary" />
+                    android:background="@color/colorPrimary"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp" />
 
                 <Button
-                    android:text="Button"
+                    android:text="@string/chrono_favorites"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/chrono_favorites_button"
                     android:layout_weight="1"
-                    android:background="@color/colorPrimary" />
+                    android:background="@color/colorPrimary"
+                    android:paddingRight="10dp"
+                    android:paddingLeft="10dp" />
 
             </LinearLayout>
         </HorizontalScrollView>
