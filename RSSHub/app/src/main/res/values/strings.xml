@@ -41,4 +41,10 @@
     <string name="category">Catégorie</string>
 
     <string name="add_feed_please_wait">Ajout du feed, attendez...</string>
+
+    <string name="add">Ajouter</string>
+
+    <string name="add_this_feed_question">Ajouter ce feed?</string>
+    <string name="an_error_occured">Erreur lors de l\'ajout.</string>
+    <string name="ok">OK</string>
 </resources>

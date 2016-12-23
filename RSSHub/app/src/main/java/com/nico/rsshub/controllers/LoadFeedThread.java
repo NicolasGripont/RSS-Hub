@@ -1,5 +1,6 @@
 package com.nico.rsshub.controllers;
 
+import android.graphics.Bitmap;
 import android.os.Environment;
 
 import com.nico.rsshub.modeles.Feed;
@@ -24,8 +25,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 /**
  * Created by Nico on 19/12/2016.
@@ -36,6 +39,8 @@ public class LoadFeedThread extends Thread {
     private static String cacheDirectory = Environment.getExternalStorageDirectory() + "/RSS Hub/cache/";
 
     private List<Information> informationList;
+
+    private Map<Information, Bitmap> images = null;
 
     private List<DownloadImageThread> downloadImageThreads;
 
@@ -53,36 +58,21 @@ public class LoadFeedThread extends Thread {
         this.refreshTimeInMs = refreshTimeInMs;
         this.informationList = new ArrayList<>();
         this.downloadImageThreads = new ArrayList<>();
+        this.images = new HashMap<>();
     }
 
     public List<Information> getInformationList() {
         return this.informationList;
     }
 
+    public Map<Information, Bitmap> getImages() { return images; }
+
     @Override
     public void run() {
         super.run();
         try {
             this.informationList = parseAFeed(this.feed);
-            if(this.informationList != null && !this.informationList.isEmpty()) {
-                Controller.getInstance().getMutexFeeds().acquire();
-                Collections.sort(this.informationList, new Comparator<Information>() {
-                    @Override
-                    public int compare(Information lhs, Information rhs) {
-                        if(lhs.getDatePublication().getTime() - rhs.getDatePublication().getTime() > 0) {
-                            return -1;
-                        } else if (lhs.getDatePublication().getTime() - rhs.getDatePublication().getTime() == 0) {
-                            return 0;
-                        }
-                        return 1;
-                    }
-                });
-                Controller.getInstance().getInformationList().addAll(this.informationList);
-                Controller.getInstance().getFeeds().put(feed,this.informationList);
-                Controller.getInstance().getMutexFeeds().release();
-            }
         } catch (Exception e) {
-            this.informationList = null;
             System.out.println(e);
         }
 
@@ -91,10 +81,7 @@ public class LoadFeedThread extends Thread {
             try {
                 downloadImageThread.join();
                 if(downloadImageThread.getBitmap() != null) {
-                    //TODO mutex
-                    Controller.getInstance().getMutexImages().acquire();
-                    Controller.getInstance().getImages().put(downloadImageThread.getInformation(), downloadImageThread.getBitmap());
-                    Controller.getInstance().getMutexImages().release();
+                    this.images.put(downloadImageThread.getInformation(), downloadImageThread.getBitmap());
                 }
             } catch (InterruptedException e) {
                 e.printStackTrace();

@@ -53,6 +53,10 @@ public class LoadFeedsTask extends AsyncTask<Feed, Integer, String> {
         for(LoadFeedThread loadFeedThread : this.loadFeedThreads) {
             try {
                 loadFeedThread.join();
+                if(loadFeedThread.getInformationList() != null && !loadFeedThread.getInformationList().isEmpty()) {
+                    Controller.getInstance().getInformationList().addAll(loadFeedThread.getInformationList());
+                    Controller.getInstance().getImages().putAll(loadFeedThread.getImages());
+                }
             } catch (InterruptedException e) {
             }
         }

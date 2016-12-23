@@ -10,16 +10,16 @@ import java.net.URL;
  * Created by Nico on 15/12/2016.
  */
 
-public class LoadFeedTask extends AsyncTask<String, Integer, String> {
+public class LoadInformationDetailTask extends AsyncTask<String, Integer, String> {
 
-    public LoadFeedTask(){
+    public LoadInformationDetailTask(){
         super();
     }
 
     protected String doInBackground(String... urls) {
         String url;
         try {
-            int code = LoadFeedTask.getResponseCode(urls[0].replace("www.","m."));
+            int code = LoadInformationDetailTask.getResponseCode(urls[0].replace("www.","m."));
             if(code == 200) {
                 url = urls[0].replace("www.","m.");
             } else {

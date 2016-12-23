@@ -18,7 +18,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Semaphore;
 
 /**
  * Created by Nico on 14/12/2016.
@@ -27,6 +26,7 @@ import java.util.concurrent.Semaphore;
 public class Controller {
 
     private static Controller instance = null;
+
     private SplashActivity splashActivity = null;
     private InformationActivity informationActivity = null;
     private InformationDetailActivity informationDetailActivity = null;
@@ -34,18 +34,20 @@ public class Controller {
     private AddFeedActivity addFeedActivity = null;
 
     private Activity currentActivity = null;
+
     private List<Information> informationList = null;
     private List<Information> favorites = null;
     private Map<Feed,List<Information>> feeds = null;
     private Map<Information, Bitmap> images = null;
     private List<Feed> feedsList = null;
-    private Semaphore mutexFeeds = null;
-    private Semaphore mutexImages = null;
 
     private List<Feed> selectedFeeds = null;
     private boolean isManageFeedsMode = false;
 
     private Feed newFeed = null;
+    private List<Information> newInformationList = null;
+    private Map<Information, Bitmap> newImages = null;
+    private AddFeedTask addFeedTask = null;
 
 
     public static Controller getInstance() {
@@ -60,8 +62,6 @@ public class Controller {
         favorites = new ArrayList<>();
         feeds = new HashMap<>();
         images = new HashMap<>();
-        mutexFeeds = new Semaphore(1);
-        mutexImages = new Semaphore(1);
         feedsList = new ArrayList<>();
         selectedFeeds = new ArrayList<>();
     }
@@ -73,12 +73,6 @@ public class Controller {
     public Map<Feed, List<Information>> getFeeds() { return feeds; }
 
     public Map<Information, Bitmap> getImages() { return images; }
-
-    public Semaphore getMutexFeeds() { return mutexFeeds; }
-
-    public Semaphore getMutexImages() {
-        return mutexImages;
-    }
 
     public Activity getCurrentActivity() {
         return currentActivity;
@@ -125,7 +119,7 @@ public class Controller {
         feed2.setCategory(Category.COMPUTING);
         feed2.setCacheFileName(createCacheFileName(feed2.getTitle(),feed2.getUrl()));
 
-        feedsList.add(feed1);
+//        feedsList.add(feed1);
         feedsList.add(feed2);
 
         Feed[] feeds = new Feed[feedsList.size()];
@@ -142,8 +136,8 @@ public class Controller {
             Intent intent = new Intent(this.informationActivity, InformationDetailActivity.class);
             intent.putExtra("information", information);
             this.informationActivity.startActivity(intent);
-            LoadFeedTask loadFeedTask = new LoadFeedTask();
-            loadFeedTask.execute(information.getUrl());
+            LoadInformationDetailTask loadInformationDetailTask = new LoadInformationDetailTask();
+            loadInformationDetailTask.execute(information.getUrl());
         }
     }
 
@@ -218,6 +212,9 @@ public class Controller {
                 this.addFeedActivity = null;
                 this.manageFeedsActivity.refreshListViewFeeds();
                 this.newFeed = null;
+                this.newInformationList = null;
+                this.newImages = null;
+                this.addFeedTask = null;
             }
         }
     }
@@ -389,14 +386,65 @@ public class Controller {
     public void onAddButtonClicked() {
         if(this.currentActivity != null) {
             if (this.currentActivity == this.addFeedActivity) {
-//                if (this.addFeedActivity.areInputsEdited()) {
+                if (this.addFeedActivity.areInputsEdited()) {
                     this.newFeed = new Feed();
-                    this.addFeedActivity.showAddAlertDialog();
-//                } else {
-//
-//                }
+                    this.newFeed.setTitle(this.addFeedActivity.getFeedTitle());
+                    this.newFeed.setUrl(this.addFeedActivity.getFeedUrl());
+                    this.newFeed.setCategory(this.addFeedActivity.getFeedCategory());
+                    this.newFeed.setCacheFileName(this.createCacheFileName(newFeed.getTitle(),newFeed.getUrl()));
+                    this.addFeedActivity.showLoadFeedAlertDialog();
+                    this.addFeedTask = new AddFeedTask();
+                    this.addFeedTask.execute(this.newFeed);
+                } else {
+
+                }
             }
         }
     }
 
+
+
+    public void loadFeedTaskFinished(List<Information> informationList, Map<Information,Bitmap> images) {
+        if(this.currentActivity != null) {
+            if (this.currentActivity == this.addFeedActivity) {
+                this.addFeedActivity.dismissLoadingDialog();
+                if(informationList.size() != 0) {
+                    this.newInformationList = informationList;
+                    this.newImages = images;
+                    this.addFeedActivity.showConfirmationAlertDialog();
+                } else {
+                    this.newFeed = null;
+                    this.newInformationList = null;
+                    this.newImages = null;
+                    this.addFeedActivity.showErrorAlertDialog();
+                }
+                this.addFeedTask = null;
+            }
+        }
+    }
+
+    public void addNewFeed() {
+        if(this.currentActivity != null) {
+            if (this.currentActivity == this.addFeedActivity) {
+                this.feedsList.add(newFeed);
+                this.informationList.addAll(newInformationList);
+                this.images.putAll(newImages);
+                this.feeds.put(newFeed,newInformationList);
+            }
+        }
+    }
+
+    public void cancelLoadFeed() {
+        if(this.currentActivity != null) {
+            if (this.currentActivity == this.addFeedActivity) {
+                if(this.addFeedTask != null) {
+                    this.addFeedTask.cancel(true);
+                }
+                this.addFeedTask = null;
+                this.newFeed = null;
+                this.newInformationList = null;
+                this.newImages = null;
+            }
+        }
+    }
 }

@@ -7,6 +7,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -35,6 +36,8 @@ public class AddFeedActivity extends AppCompatActivity {
     private Vector<CategoryRadioButton> categoryRadioButtons = null;
 
     private FloatingActionButton floatingActionButton = null;
+
+    private AlertDialog loadingDialog = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,7 +76,7 @@ public class AddFeedActivity extends AppCompatActivity {
         this.categoryRadioButtons = new Vector<>();
         for(Category category : Category.values()) {
             CategoryRadioButton radioButton = new CategoryRadioButton(this,category);
-            radioButton.setTextSize(24);
+            radioButton.setTextSize(18);
             radioButton.setTextColor(this.feedTitleTextView.getTextColors().getDefaultColor());
             radioButton.setPadding(0,0,0,20);
             radioButton.setOnClickListener(new View.OnClickListener() {
@@ -107,32 +110,6 @@ public class AddFeedActivity extends AppCompatActivity {
         Controller.getInstance().onBackClicked();
     }
 
-    public void showAddAlertDialog() {
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(AddFeedActivity.this);
-
-        alertDialogBuilder.setTitle(R.string.add_feed_please_wait);
-
-        alertDialogBuilder.setNegativeButton(R.string.cancel,
-            new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int which) {
-
-                }
-            }
-        );
-
-        final AlertDialog alertDialog = alertDialogBuilder.create();
-
-
-        alertDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-            @Override
-            public void onCancel(DialogInterface dialog) {
-                alertDialog.show();
-            }
-        });
-
-        alertDialog.show();
-    }
-
     public String getFeedTitle() {
         return this.feedTitleEditText.getText().toString();
     }
@@ -157,4 +134,96 @@ public class AddFeedActivity extends AppCompatActivity {
         }
         return false;
     }
+
+    public void showLoadFeedAlertDialog() {
+        InputMethodManager inputMethodManager = (InputMethodManager)getSystemService(this.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(this.findViewById(R.id.linearLayout).getWindowToken(), 0);
+    
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(AddFeedActivity.this);
+
+        alertDialogBuilder.setTitle(R.string.add_feed_please_wait);
+
+        alertDialogBuilder.setNegativeButton(R.string.cancel,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        Controller.getInstance().cancelLoadFeed();
+                    }
+                }
+        );
+
+        this.loadingDialog = alertDialogBuilder.create();
+
+        this.loadingDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                loadingDialog.show();
+            }
+        });
+
+        this.loadingDialog.show();
+    }
+
+    public void showConfirmationAlertDialog() {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(AddFeedActivity.this);
+
+        alertDialogBuilder.setTitle(R.string.add_this_feed_question);
+
+        alertDialogBuilder.setNegativeButton(R.string.cancel,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        Controller.getInstance().cancelLoadFeed();
+                    }
+                }
+        );
+
+        alertDialogBuilder.setPositiveButton(R.string.add,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        Controller.getInstance().addNewFeed();
+                        dialog.dismiss();
+                        onBackPressed();
+                    }
+                }
+        );
+
+        final AlertDialog alertDialog = alertDialogBuilder.create();
+
+
+        alertDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                alertDialog.show();
+            }
+        });
+
+        alertDialog.show();
+    }
+
+    public void showErrorAlertDialog() {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(AddFeedActivity.this);
+
+        alertDialogBuilder.setTitle(R.string.an_error_occured);
+
+        alertDialogBuilder.setPositiveButton(R.string.ok,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                }
+        );
+
+        final AlertDialog alertDialog = alertDialogBuilder.create();
+
+
+        alertDialog.show();
+    }
+
+    public void dismissLoadingDialog() {
+        if(this.loadingDialog != null) {
+            this.loadingDialog.dismiss();
+            this.loadingDialog = null;
+        }
+    }
+
+
 }
