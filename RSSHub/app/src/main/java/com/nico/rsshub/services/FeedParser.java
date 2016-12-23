@@ -1,10 +1,8 @@
 package com.nico.rsshub.services;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Environment;
 
-import com.nico.rsshub.controllers.DownloadImageTask;
+import com.nico.rsshub.controllers.DownloadImageThread;
 import com.nico.rsshub.modeles.Feed;
 import com.nico.rsshub.modeles.Information;
 
@@ -19,7 +17,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -36,7 +33,7 @@ public class FeedParser {
 
 	private long refreshTimeInMs;
 
-	private List<DownloadImageTask> downloadImageTasks;
+	private List<DownloadImageThread> downloadImageThreads;
 
 	public FeedParser() {
 		this(0);
@@ -45,7 +42,7 @@ public class FeedParser {
 	public FeedParser(final long refreshTime) {
 		super();
 		this.refreshTimeInMs = refreshTime;
-		downloadImageTasks = new ArrayList<>();
+		downloadImageThreads = new ArrayList<>();
 	}
 
 	public long getRefreshTimeInMs() {

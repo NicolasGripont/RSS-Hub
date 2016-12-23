@@ -1,13 +1,12 @@
 package com.nico.rsshub.views;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -33,7 +32,7 @@ public class AddFeedActivity extends AppCompatActivity {
 
     private EditText feedUrlEditText = null;
 
-    private Vector<RadioButton> radioButtonsCategories = null;
+    private Vector<CategoryRadioButton> categoryRadioButtons = null;
 
     private FloatingActionButton floatingActionButton = null;
 
@@ -57,8 +56,7 @@ public class AddFeedActivity extends AppCompatActivity {
         this.floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+               Controller.getInstance().onAddButtonClicked();
             }
         });
 
@@ -72,10 +70,9 @@ public class AddFeedActivity extends AppCompatActivity {
         this.feedUrlEditText = (EditText) findViewById(R.id.feed_url_editText);
 
         this.linearLayoutCategories = (LinearLayout) findViewById(R.id.feed_categories_linearLayout);
-        this.radioButtonsCategories = new Vector<>();
+        this.categoryRadioButtons = new Vector<>();
         for(Category category : Category.values()) {
-            RadioButton radioButton = new RadioButton(this);
-            radioButton.setText(category.getValue());
+            CategoryRadioButton radioButton = new CategoryRadioButton(this,category);
             radioButton.setTextSize(24);
             radioButton.setTextColor(this.feedTitleTextView.getTextColors().getDefaultColor());
             radioButton.setPadding(0,0,0,20);
@@ -84,7 +81,7 @@ public class AddFeedActivity extends AppCompatActivity {
                 public void onClick(View v) {
                     RadioButton radioButton = (RadioButton) v;
                     if(radioButton.isChecked()) {
-                        for(RadioButton r : radioButtonsCategories) {
+                        for(CategoryRadioButton r : categoryRadioButtons) {
                             if(r != radioButton) {
                                 r.setChecked(false);
                             }
@@ -95,7 +92,7 @@ public class AddFeedActivity extends AppCompatActivity {
             });
             this.linearLayoutCategories.addView(radioButton);
             this.linearLayoutCategories.setPadding(0,0,0,300);
-            this.radioButtonsCategories.add(radioButton);
+            this.categoryRadioButtons.add(radioButton);
         }
 
         findViewById(R.id.linearLayout).requestFocus();
@@ -110,4 +107,54 @@ public class AddFeedActivity extends AppCompatActivity {
         Controller.getInstance().onBackClicked();
     }
 
+    public void showAddAlertDialog() {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(AddFeedActivity.this);
+
+        alertDialogBuilder.setTitle(R.string.add_feed_please_wait);
+
+        alertDialogBuilder.setNegativeButton(R.string.cancel,
+            new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+
+                }
+            }
+        );
+
+        final AlertDialog alertDialog = alertDialogBuilder.create();
+
+
+        alertDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                alertDialog.show();
+            }
+        });
+
+        alertDialog.show();
+    }
+
+    public String getFeedTitle() {
+        return this.feedTitleEditText.getText().toString();
+    }
+
+    public String getFeedUrl() {
+        return this.feedUrlEditText.getText().toString();
+    }
+
+    public Category getFeedCategory() {
+        Category category = null;
+        for(CategoryRadioButton radioButton : categoryRadioButtons) {
+            if(radioButton.isChecked()) {
+                category = radioButton.getCategory();
+            }
+        }
+        return category;
+    }
+
+    public boolean areInputsEdited() {
+        if(!getFeedTitle().equals("") && !getFeedUrl().equals("") && getFeedCategory() != null) {
+            return true;
+        }
+        return false;
+    }
 }

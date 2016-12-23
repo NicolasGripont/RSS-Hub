@@ -11,13 +11,13 @@ import java.io.InputStream;
  * Created by Nico on 19/12/2016.
  */
 
-public class DownloadImageTask extends Thread {
+public class DownloadImageThread extends Thread {
 
     private Information information;
 
     private Bitmap bitmap;
 
-    public DownloadImageTask(Information information) {
+    public DownloadImageThread(Information information) {
         super();
         this.bitmap = null;
         this.information = information;

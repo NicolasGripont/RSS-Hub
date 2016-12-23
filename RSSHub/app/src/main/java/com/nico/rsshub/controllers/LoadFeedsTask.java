@@ -1,33 +1,14 @@
 package com.nico.rsshub.controllers;
 
 import android.os.AsyncTask;
-import android.os.Environment;
 
 import com.nico.rsshub.modeles.Feed;
 import com.nico.rsshub.modeles.Information;
-import com.nico.rsshub.services.FeedParser;
 
-import org.jdom2.Document;
-import org.jdom2.Element;
-import org.jdom2.JDOMException;
-import org.jdom2.input.SAXBuilder;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 /**
  * Created by Nico on 13/12/2016.
@@ -37,7 +18,7 @@ public class LoadFeedsTask extends AsyncTask<Feed, Integer, String> {
 
     private long refreshTimeInMs;
 
-    private List<LoadFeedTask> loadFeedTasks;
+    private List<LoadFeedThread> loadFeedThreads;
 
     private List<Information> informationList;
 
@@ -46,7 +27,7 @@ public class LoadFeedsTask extends AsyncTask<Feed, Integer, String> {
     public LoadFeedsTask(final long refreshTime) {
         super();
         this.refreshTimeInMs = refreshTime;
-        this.loadFeedTasks = new ArrayList<>();
+        this.loadFeedThreads = new ArrayList<>();
         this.informationList = new ArrayList<>();
     }
 
@@ -58,9 +39,9 @@ public class LoadFeedsTask extends AsyncTask<Feed, Integer, String> {
 
         for(Feed feed : feeds) {
             try {
-                LoadFeedTask loadFeedTask = new LoadFeedTask(feed,0);
-                this.loadFeedTasks.add(loadFeedTask);
-                loadFeedTask.start();
+                LoadFeedThread loadFeedThread = new LoadFeedThread(feed,0);
+                this.loadFeedThreads.add(loadFeedThread);
+                loadFeedThread.start();
             } catch (Exception e) {
             }
         }
@@ -69,9 +50,9 @@ public class LoadFeedsTask extends AsyncTask<Feed, Integer, String> {
     }
 
     protected void onPostExecute(String result) {
-        for(LoadFeedTask loadFeedTask : this.loadFeedTasks) {
+        for(LoadFeedThread loadFeedThread : this.loadFeedThreads) {
             try {
-                loadFeedTask.join();
+                loadFeedThread.join();
             } catch (InterruptedException e) {
             }
         }

@@ -40,4 +40,5 @@
     <string name="url">URL</string>
     <string name="category">Catégorie</string>
 
+    <string name="add_feed_please_wait">Ajout du feed, attendez...</string>
 </resources>

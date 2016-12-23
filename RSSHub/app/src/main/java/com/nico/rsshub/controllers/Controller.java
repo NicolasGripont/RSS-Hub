@@ -15,8 +15,6 @@ import com.nico.rsshub.views.ManageFeedsActivity;
 import com.nico.rsshub.views.SplashActivity;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -144,8 +142,8 @@ public class Controller {
             Intent intent = new Intent(this.informationActivity, InformationDetailActivity.class);
             intent.putExtra("information", information);
             this.informationActivity.startActivity(intent);
-            TestUrlTask testUrlTask = new TestUrlTask();
-            testUrlTask.execute(information.getUrl());
+            LoadFeedTask loadFeedTask = new LoadFeedTask();
+            loadFeedTask.execute(information.getUrl());
         }
     }
 
@@ -370,7 +368,6 @@ public class Controller {
 
                 Intent intent = new Intent(this.manageFeedsActivity, AddFeedActivity.class);
                 this.manageFeedsActivity.startActivity(intent);
-                this.newFeed = new Feed();
 
                 //TODO afficher vue ajout
                 //TODO ajouter refressh this.manageFeedsActivity.updateListView(); lors du retour a la liste des feeds
@@ -383,6 +380,21 @@ public class Controller {
             if (this.currentActivity == this.manageFeedsActivity) {
                 //TODO afficher vue modifier
                 //TODO ajouter refressh this.manageFeedsActivity.updateListView(); lors du retour a la liste des feeds
+            }
+        }
+    }
+
+
+
+    public void onAddButtonClicked() {
+        if(this.currentActivity != null) {
+            if (this.currentActivity == this.addFeedActivity) {
+//                if (this.addFeedActivity.areInputsEdited()) {
+                    this.newFeed = new Feed();
+                    this.addFeedActivity.showAddAlertDialog();
+//                } else {
+//
+//                }
             }
         }
     }
