@@ -109,24 +109,26 @@ public class Controller {
     public void loadInformations(){
         LoadFeedsTask loadFeedsTask = new LoadFeedsTask();
 
-//        final Feed feed1 = new Feed();
-//        feed1.setUrl("http://www.lequipe.fr/rss/actu_rss.xml");
-//        feed1.setTitle("L'Equipe");
-//        feed1.setCategory(Category.SPORT);
-//        feed1.setCacheFileName(createCacheFileName(feed1.getTitle(),feed1.getUrl()));
-//        feed1.setFavorite(true);
-//
-//        final Feed feed2 = new Feed();
-//        feed2.setUrl("http://korben.info/feed");
-//        feed2.setTitle("Korben");
-//        feed2.setCategory(Category.COMPUTING);
-//        feed2.setCacheFileName(createCacheFileName(feed2.getTitle(),feed2.getUrl()));
-//
-//        feedsList.add(feed1);
-//        feedsList.add(feed2);
+        final Feed feed1 = new Feed();
+        feed1.setUrl("http://www.lequipe.fr/rss/actu_rss.xml");
+        feed1.setSource("L'Equipe");
+        feed1.setTitle("A la une");
+        feed1.getTags().add("#sport");
+        feed1.setCacheFileName(createCacheFileName(feed1.getSource(),feed1.getTitle(),feed1.getUrl()));
+        feed1.setFavorite(true);
+
+        final Feed feed2 = new Feed();
+        feed2.setUrl("http://korben.info/feed");
+        feed2.setSource("Korben");
+        feed2.setTitle("A la une");
+        feed2.getTags().add("#informatique");
+        feed2.setCacheFileName(createCacheFileName(feed2.getSource(),feed2.getTitle(),feed2.getUrl()));
+
+        feedsList.add(feed1);
+        feedsList.add(feed2);
 //
 //        FeedManager.writeFeeds(this.currentActivity.getApplicationContext(),feedsList);
-        this.feedsList = FeedManager.readFeeds(this.currentActivity.getApplicationContext());
+//        this.feedsList = FeedManager.readFeeds(this.currentActivity.getApplicationContext());
 
         Feed[] feeds = new Feed[feedsList.size()];
         for(int i = 0; i < feedsList.size(); i++) {
@@ -168,15 +170,19 @@ public class Controller {
         }
     }
 
-    private String createCacheFileName(String feedName, String url) {
+    private String createCacheFileName(String feedSource, String feedTitle, String url) {
         StringBuilder sb = new StringBuilder();
 
         //ajout dossier cache
         sb.append(this.getCurrentActivity().getCacheDir().getAbsolutePath());
         sb.append("/");
 
-        //ajout nom du nom du feed
-        sb.append(feedName.replaceAll("[^A-Z^a-z^0-9]", ""));
+        //ajout source du feed
+        sb.append(feedSource.replaceAll("[^A-Z^a-z^0-9]", ""));
+        sb.append(".");
+
+        //ajout titre du feed
+        sb.append(feedTitle.replaceAll("[^A-Z^a-z^0-9]", ""));
         sb.append(".");
 
         //ajout nom du fichier de l'url
@@ -396,10 +402,11 @@ public class Controller {
             if (this.currentActivity == this.addFeedActivity) {
                 if (this.addFeedActivity.areInputsEdited()) {
                     this.newFeed = new Feed();
+                    this.newFeed.setSource(this.addFeedActivity.getFeedSource());
                     this.newFeed.setTitle(this.addFeedActivity.getFeedTitle());
                     this.newFeed.setUrl(this.addFeedActivity.getFeedUrl());
-                    this.newFeed.setCategory(this.addFeedActivity.getFeedCategory());
-                    this.newFeed.setCacheFileName(this.createCacheFileName(newFeed.getTitle(),newFeed.getUrl()));
+                    this.newFeed.setTags(this.addFeedActivity.getFeedTags());
+                    this.newFeed.setCacheFileName(this.createCacheFileName(newFeed.getSource(),newFeed.getTitle(),newFeed.getUrl()));
                     this.addFeedActivity.showLoadFeedAlertDialog();
                     this.addFeedTask = new AddFeedTask();
                     this.addFeedTask.execute(this.newFeed);
@@ -465,5 +472,19 @@ public class Controller {
                 this.newImages = null;
             }
         }
+    }
+
+    public List<String> getTags() {
+        List<String> tags = new ArrayList<>();
+        for(Feed feed : feedsList) {
+            List<String> tmpTags = new ArrayList<>();
+            for(String tag : feed.getTags()) {
+                if (!tags.contains(tag)) {
+                    tmpTags.add(tag);
+                }
+            }
+            tags.addAll(tmpTags);
+        }
+        return tags;
     }
 }

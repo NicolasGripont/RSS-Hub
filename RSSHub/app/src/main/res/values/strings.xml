@@ -48,4 +48,7 @@
     <string name="add_this_feed_question">Ajouter ce feed?</string>
     <string name="an_error_occured">Erreur lors de l\'ajout.</string>
     <string name="ok">OK</string>
+
+    <string name="tags">Tags</string>
+    <string name="source">Source</string>
 </resources>

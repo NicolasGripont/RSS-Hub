@@ -1,31 +1,39 @@
 package com.nico.rsshub.modeles;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Feed {
+	private String source;
 	private String title;
 	private String url;
 	private String cacheFileName;
-	private Category category;
+	private List<String> tags;
 	private boolean isFavorite;
 
 	public Feed() {
 		super();
+		this.source = "";
 		this.title = "";
 		this.url = "";
 		this.cacheFileName = "";
-		this.category = Category.OTHER;
+		this.tags = new ArrayList<>();
 		this.isFavorite = false;
 	}
 
-	public Feed(final String title, final String url, final List<String> tags, final Category category, final String cacheFileName, final boolean isFavorite) {
+	public Feed(final String source, final String title, final String url, final String cacheFileName, final List<String> tags, final boolean isFavorite) {
 		super();
+		this.source = source;
 		this.title = title;
 		this.url = url;
 		this.cacheFileName = cacheFileName;
-		this.category = category;
+		this.tags = tags;
 		this.isFavorite = isFavorite;
 	}
+
+	public String getSource() { return source; }
+
+	public void setSource(String source) { this.source = source; }
 
 	public String getTitle() {
 		return this.title;
@@ -51,9 +59,9 @@ public class Feed {
 		this.cacheFileName = cacheFileName;
 	}
 
-	public Category getCategory() { return category; }
+	public List<String> getTags() { return tags; }
 
-	public void setCategory(Category category) { this.category = category; }
+	public void setTags(List<String> tags) { this.tags = tags; }
 
 	public boolean isFavorite() { return isFavorite; }
 
@@ -65,7 +73,7 @@ public class Feed {
 				"title='" + title + '\'' +
 				", url='" + url + '\'' +
 				", cacheFileName='" + cacheFileName + '\'' +
-				", category=" + category +
+				", tags=" + tags +
 				", isFavorite=" + isFavorite +
 				'}';
 	}

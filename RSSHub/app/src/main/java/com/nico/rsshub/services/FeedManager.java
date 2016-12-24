@@ -30,7 +30,11 @@ public class FeedManager {
                 JSONObject jsonFeed = new JSONObject();
                 jsonFeed.put("title",feed.getTitle());
                 jsonFeed.put("url",feed.getUrl());
-                jsonFeed.put("category",feed.getCategory());
+                JSONArray jsonTags = new JSONArray();
+                for(String tag : feed.getTags()) {
+                    jsonTags.put(tag);
+                }
+                jsonFeed.put("tags",jsonTags);
                 jsonFeed.put("isFavorite",feed.isFavorite());
                 jsonFeed.put("cacheFileName",feed.getCacheFileName());
                 jsonFeeds.put(jsonFeed);
@@ -61,7 +65,10 @@ public class FeedManager {
                 JSONObject jsonObject = (JSONObject) jsonArray.get(i);
                 feed.setTitle(jsonObject.getString("title"));
                 feed.setUrl(jsonObject.getString("url"));
-                feed.setCategory(Category.valueOf(jsonObject.getString("category")));
+                JSONArray jsonTags = jsonObject.getJSONArray("tags");
+                for(int j = 0; i < jsonTags.length(); i++) {
+                    feed.getTags().add(jsonTags.getString(j));
+                }
                 feed.setFavorite(jsonObject.getBoolean("isFavorite"));
                 feed.setCacheFileName(jsonObject.getString("cacheFileName"));
                 feeds.add(feed);

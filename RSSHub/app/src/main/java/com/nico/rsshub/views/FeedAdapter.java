@@ -78,15 +78,21 @@ public class FeedAdapter extends BaseAdapter {
         }
 
         //(2) : Récupération des TextView de notre layout
+        TextView feed_source = (TextView)layoutItem.findViewById(R.id.feed_source);
         TextView feed_title = (TextView)layoutItem.findViewById(R.id.feed_title);
-        TextView feed_category = (TextView)layoutItem.findViewById(R.id.feed_category);
+        TextView feed_tags = (TextView)layoutItem.findViewById(R.id.feed_tags);
         TextView feed_url = (TextView)layoutItem.findViewById(R.id.feed_url);
         ImageView feed_isFavorite_ImageView = (ImageView) layoutItem.findViewById(R.id.feed_isFavorite_imageView);
         LinearLayout feed_layout_favorites = (LinearLayout) layoutItem.findViewById(R.id.feed_layout_favorites);
 
         //(3) : Renseignement des valeurs
+        feed_source.setText(feeds.get(position).getSource());
         feed_title.setText(feeds.get(position).getTitle());
-        feed_category.setText(feeds.get(position).getCategory().getValue());
+        String tags = "";
+        for (String tag: feeds.get(position).getTags()) {
+            tags += tag + " ";
+        }
+        feed_tags.setText(tags);
         feed_url.setText(feeds.get(position).getUrl());
 
         if(!isManageFeedsMode) {

@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -16,28 +17,37 @@ import android.widget.TextView;
 import com.nico.rsshub.R;
 import com.nico.rsshub.controllers.Controller;
 import com.nico.rsshub.modeles.Category;
+import com.nico.rsshub.modeles.Feed;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Vector;
 
 public class AddFeedActivity extends AppCompatActivity {
 
-    private LinearLayout linearLayoutCategories = null;
+    private LinearLayout linearLayoutTags = null;
+
+    private TextView feedSourceTextView = null;
 
     private TextView feedTitleTextView = null;
 
     private TextView feedUrlTextView = null;
 
-    private TextView feedCategoryTextView = null;
+    private TextView feedTagsTextView = null;
+
+    private EditText feedSourceEditText = null;
 
     private EditText feedTitleEditText = null;
 
     private EditText feedUrlEditText = null;
 
-    private Vector<CategoryRadioButton> categoryRadioButtons = null;
+    private EditText feedTagsEditText = null;
 
     private FloatingActionButton floatingActionButton = null;
 
     private AlertDialog loadingDialog = null;
+
+    private Vector<CheckBox> checkBoxes = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,40 +73,35 @@ public class AddFeedActivity extends AppCompatActivity {
             }
         });
 
+        this.feedSourceTextView = (TextView) findViewById(R.id.feed_source_textView);
+        this.feedSourceTextView.setText(R.string.source);
         this.feedTitleTextView = (TextView) findViewById(R.id.feed_title_textView);
         this.feedTitleTextView.setText(R.string.title);
         this.feedUrlTextView = (TextView) findViewById(R.id.feed_url_textView);
         this.feedUrlTextView.setText(R.string.url);
-        this.feedCategoryTextView = (TextView) findViewById(R.id.feed_category_textView);
-        this.feedCategoryTextView.setText(R.string.category);
+        this.feedTagsTextView = (TextView) findViewById(R.id.feed_tags_textView);
+        this.feedTagsTextView.setText(R.string.tags);
+
+        this.feedSourceEditText = (EditText) findViewById(R.id.feed_source_editText);
         this.feedTitleEditText = (EditText) findViewById(R.id.feed_title_editText);
         this.feedUrlEditText = (EditText) findViewById(R.id.feed_url_editText);
+        this.feedTagsEditText = (EditText) findViewById(R.id.feed_tags_editText);
 
-        this.linearLayoutCategories = (LinearLayout) findViewById(R.id.feed_categories_linearLayout);
-        this.categoryRadioButtons = new Vector<>();
-        for(Category category : Category.values()) {
-            CategoryRadioButton radioButton = new CategoryRadioButton(this,category);
-            radioButton.setTextSize(18);
-            radioButton.setTextColor(this.feedTitleTextView.getTextColors().getDefaultColor());
-            radioButton.setPadding(0,0,0,20);
-            radioButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    RadioButton radioButton = (RadioButton) v;
-                    if(radioButton.isChecked()) {
-                        for(CategoryRadioButton r : categoryRadioButtons) {
-                            if(r != radioButton) {
-                                r.setChecked(false);
-                            }
-                        }
-                    }
 
-                }
-            });
-            this.linearLayoutCategories.addView(radioButton);
-            this.linearLayoutCategories.setPadding(0,0,0,300);
-            this.categoryRadioButtons.add(radioButton);
+        this.linearLayoutTags = (LinearLayout) findViewById(R.id.feed_categories_linearLayout);
+        this.checkBoxes = new Vector<>();
+        for(String tag : Controller.getInstance().getTags()) {
+            CheckBox checkBox = new CheckBox(this);
+            checkBox.setText(tag);
+            checkBox.setTextSize(18);
+            checkBox.setTextColor(this.feedTitleTextView.getTextColors().getDefaultColor());
+            checkBox.setPadding(0,0,0,20);
+
+            this.linearLayoutTags.addView(checkBox);
+            this.linearLayoutTags.setPadding(0,0,0,300);
+            this.checkBoxes.add(checkBox);
         }
+
 
         findViewById(R.id.linearLayout).requestFocus();
 
@@ -110,6 +115,10 @@ public class AddFeedActivity extends AppCompatActivity {
         Controller.getInstance().onBackClicked();
     }
 
+    public String getFeedSource() {
+        return this.feedSourceEditText.getText().toString();
+    }
+
     public String getFeedTitle() {
         return this.feedTitleEditText.getText().toString();
     }
@@ -118,18 +127,35 @@ public class AddFeedActivity extends AppCompatActivity {
         return this.feedUrlEditText.getText().toString();
     }
 
-    public Category getFeedCategory() {
-        Category category = null;
-        for(CategoryRadioButton radioButton : categoryRadioButtons) {
-            if(radioButton.isChecked()) {
-                category = radioButton.getCategory();
+    public List<String> getFeedTags() {
+        List<String> tags = new ArrayList<>();
+
+        String[] inputTags = this.feedTagsEditText.getText().toString().trim().replaceAll("[^A-Z^a-z^0-9^#]", "").split("#");
+
+        for(String inputTag : inputTags) {
+            if (!inputTag.equals("")) {
+                String tag = "#" + inputTag.replaceAll("[^A-Z^a-z^0-9]", "");
+                if(!tags.contains(tag)) {
+                    tags.add(tag);
+                }
             }
         }
-        return category;
+
+        for(CheckBox checkBox : checkBoxes) {
+            if (checkBox.isChecked()) {
+                List<String> tmpTags = new ArrayList<>();
+                if (!tags.contains(checkBox.getText().toString())) {
+                    tmpTags.add(checkBox.getText().toString());
+                }
+                tags.addAll(tmpTags);
+            }
+        }
+
+        return tags;
     }
 
     public boolean areInputsEdited() {
-        if(!getFeedTitle().equals("") && !getFeedUrl().equals("") && getFeedCategory() != null) {
+        if(!getFeedSource().equals("") && !getFeedTitle().equals("") && !getFeedUrl().equals("")) {
             return true;
         }
         return false;

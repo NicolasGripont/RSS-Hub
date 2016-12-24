@@ -26,6 +26,7 @@ import com.nico.rsshub.modeles.Category;
 import com.nico.rsshub.modeles.Feed;
 import com.nico.rsshub.modeles.Information;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
@@ -34,7 +35,7 @@ public class InformationActivity extends AppCompatActivity
 
     private SubMenu favoritesMenu;
 
-    private SubMenu categoriesMenu;
+    private SubMenu tagsMenu;
 
     private SubMenu feedsMenu;
 
@@ -81,7 +82,7 @@ public class InformationActivity extends AppCompatActivity
         this.navigationView.setNavigationItemSelectedListener(this);
         Menu m = this.navigationView.getMenu();
         this.favoritesMenu = m.addSubMenu(R.string.favorites);
-        this.categoriesMenu  = m.addSubMenu(R.string.categories);
+        this.tagsMenu  = m.addSubMenu(R.string.tags);
         this.feedsMenu  = m.addSubMenu(R.string.feeds);
 
         //liste
@@ -257,18 +258,26 @@ public class InformationActivity extends AppCompatActivity
 
     public void refreshNavigationMenu(List<Feed> feeds) {
         this.favoritesMenu.clear();
-        this.categoriesMenu.clear();
+        this.tagsMenu.clear();
         this.feedsMenu.clear();
 
+        List<String> tags = new ArrayList<>();
         for(Feed feed : feeds) {
             if(feed.isFavorite()) {
-                this.favoritesMenu.add(feed.getTitle());
+                this.favoritesMenu.add(feed.getSource() + " - " + feed.getTitle());
             }
-            this.feedsMenu.add(feed.getTitle());
+            this.feedsMenu.add(feed.getSource() + " - " + feed.getTitle());
+            List<String> tmpTags = new ArrayList<>();
+            for(String tag : feed.getTags()) {
+                if (!tags.contains(tag)) {
+                    tmpTags.add(tag);
+                }
+            }
+            tags.addAll(tmpTags);
         }
 
-        for(Category category : Category.values()) {
-            this.categoriesMenu.add(category.getValue());
+        for(String tag : tags) {
+            this.tagsMenu.add(tag);
         }
 
     }

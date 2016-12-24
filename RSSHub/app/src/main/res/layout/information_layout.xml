@@ -23,7 +23,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/information_feed"
+            android:id="@+id/information_feed_source"
             android:layout_weight="0.53"
             android:textColor="@android:color/white"
             android:textAllCaps="false"
@@ -50,7 +50,7 @@
             android:text="TextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/information_category"
+            android:id="@+id/information_feed_title"
             android:layout_weight="3"
             android:textAlignment="textStart"
             android:textSize="18sp"
@@ -75,5 +75,13 @@
         android:layout_marginBottom="10dp"
         android:textStyle="normal|bold">
     </TextView>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/information_feed_tags"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp" />
 
 </LinearLayout>

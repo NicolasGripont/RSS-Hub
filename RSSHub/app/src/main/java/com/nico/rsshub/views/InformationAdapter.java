@@ -64,16 +64,22 @@ public class InformationAdapter extends BaseAdapter {
         }
 
         //(2) : Récupération des TextView de notre layout
-        TextView information_feed = (TextView)layoutItem.findViewById(R.id.information_feed);
-        TextView information_category = (TextView)layoutItem.findViewById(R.id.information_category);
+        TextView information_feed_source = (TextView)layoutItem.findViewById(R.id.information_feed_source);
+        TextView information_feed_title = (TextView)layoutItem.findViewById(R.id.information_feed_title);
+        TextView information_feed_tags = (TextView)layoutItem.findViewById(R.id.information_feed_tags);
         TextView information_title = (TextView)layoutItem.findViewById(R.id.information_title);
         TextView information_date = (TextView)layoutItem.findViewById(R.id.information_date);
         ImageView information_image = (ImageView)layoutItem.findViewById(R.id.information_image);
         LinearLayout LL_Fond = (LinearLayout)layoutItem.findViewById(R.id.LL_Fond);
 
         //(3) : Renseignement des valeurs
-        information_feed.setText(informationList.get(position).getFeed().getTitle());
-        information_category.setText(informationList.get(position).getFeed().getCategory().getValue());
+        information_feed_source.setText(informationList.get(position).getFeed().getSource());
+        information_feed_title.setText(informationList.get(position).getFeed().getTitle());
+        String tags = "";
+        for (String tag: informationList.get(position).getFeed().getTags()) {
+            tags += tag + " ";
+        }
+        information_feed_tags.setText(tags);
         information_title.setText(informationList.get(position).getTitle());
         if(informationList.get(position).getDatePublication() != null) {
             DateFormat dateFormat = new SimpleDateFormat("dd/MM HH:mm", Locale.ENGLISH);
@@ -106,13 +112,13 @@ public class InformationAdapter extends BaseAdapter {
 //            information_title.setTextColor(ContextCompat.getColor(context, R.color.white));
 //            information_feed.setBackgroundColor(ContextCompat.getColor(context, R.color.white));
 //            information_feed.setTextColor(ContextCompat.getColor(context, R.color.black));
-            information_feed.setBackgroundColor(ContextCompat.getColor(context, R.color.orange));
+            information_feed_source.setBackgroundColor(ContextCompat.getColor(context, R.color.orange));
         } else {
 //            LL_Fond.setBackgroundColor(ContextCompat.getColor(context, R.color.white));
 //            information_title.setTextColor(ContextCompat.getColor(context, R.color.black));
 //            information_feed.setBackgroundColor(ContextCompat.getColor(context, R.color.black));
 //            information_feed.setTextColor(ContextCompat.getColor(context, R.color.white));
-            information_feed.setBackgroundColor(ContextCompat.getColor(context, R.color.black));
+            information_feed_source.setBackgroundColor(ContextCompat.getColor(context, R.color.black));
         }
 
         //On retourne l'item créé.

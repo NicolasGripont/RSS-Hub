@@ -28,6 +28,29 @@
             android:descendantFocusability="beforeDescendants">
 
             <TextView
+                android:text="TextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/feed_source_textView"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:textSize="24sp"
+                android:textAlignment="center" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textNoSuggestions"
+                android:ems="10"
+                android:id="@+id/feed_source_editText"
+                android:textSize="18sp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginBottom="50dp" />
+
+            <TextView
                 android:text="Titre"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -35,7 +58,6 @@
                 android:textAlignment="center"
                 android:textSize="24sp"
                 android:layout_marginBottom="10dp"
-                android:layout_marginTop="20dp"
                 android:layout_marginRight="10dp"
                 android:layout_marginLeft="10dp" />
 
@@ -73,16 +95,23 @@
                 android:layout_marginBottom="50dp" />
 
             <TextView
-                android:text="Catégorie"
+                android:text="Tags"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/feed_category_textView"
+                android:id="@+id/feed_tags_textView"
                 android:textAlignment="center"
                 android:textSize="24sp"
                 android:layout_marginBottom="10dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp" />
 
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textNoSuggestions"
+                android:ems="10"
+                android:id="@+id/feed_tags_editText"
+                android:textSize="18sp" />
             <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="wrap_content"
@@ -91,7 +120,6 @@
                 android:layout_gravity="center">
 
             </LinearLayout>
-
         </LinearLayout>
     </ScrollView>
 </RelativeLayout>
