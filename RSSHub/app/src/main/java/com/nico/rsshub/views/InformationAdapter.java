@@ -87,22 +87,11 @@ public class InformationAdapter extends BaseAdapter {
         }
 
         if(this.withImage) {
-//            if (this.informationList.get(position).getImage() != null && !this.informationList.get(position).getImage().equals("")) {
-                Bitmap image = Controller.getInstance().getImages().get(this.informationList.get(position));
-//                if (image != null) {
-                    try {
-                        double ratio = (information_image.getWidth() * 1.0) / (image.getWidth() * 1.0);
-                        Bitmap newBitmap = Bitmap.createScaledBitmap(image, (int) (image.getWidth() * ratio), (int) (image.getHeight() * ratio), false);
-                        information_image.setImageBitmap(newBitmap);
-                    } catch (Exception e) {
-                        information_image.setImageDrawable(null);
-                    }
-//                } else {
-//                    information_image.setImageDrawable(null);
-//                }
-//            } else {
-//                information_image.setImageDrawable(null);
-//            }
+            Bitmap image = Controller.getInstance().getImages().get(this.informationList.get(position));
+            if(image != null)
+                information_image.setImageBitmap(image);
+            else
+                information_image.setImageDrawable(null);
         } else {
             information_image.setImageDrawable(null);
         }

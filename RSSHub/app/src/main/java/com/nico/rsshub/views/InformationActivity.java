@@ -158,15 +158,17 @@ public class InformationActivity extends AppCompatActivity
                 for(Button button :buttons) {
                     button.setTextColor(getColor(R.color.white));
                 }
-                View page = viewPager.getChildAt(position);
-                int index = 0;
-                for(int i = 0; i < pages.size(); i++){
-                    if(page.equals(pages.get(i))) {
-                        index = i;
-                        break;
+                if(viewPager != null) {
+                    View page = viewPager.getChildAt(position);
+                    int index = 0;
+                    for (int i = 0; i < pages.size(); i++) {
+                        if (page.equals(pages.get(i))) {
+                            index = i;
+                            break;
+                        }
                     }
+                    buttons.get(index).setTextColor(getColor(R.color.orange));
                 }
-                buttons.get(index).setTextColor(getColor(R.color.orange));
             }
 
             @Override
