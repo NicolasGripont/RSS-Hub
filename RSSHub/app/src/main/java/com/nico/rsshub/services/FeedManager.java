@@ -1,18 +1,13 @@
 package com.nico.rsshub.services;
 
 import android.content.Context;
-import android.provider.MediaStore;
 
-import com.nico.rsshub.modeles.Category;
 import com.nico.rsshub.modeles.Feed;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.InputStream;
 import java.util.ArrayList;

@@ -11,13 +11,10 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.nico.rsshub.R;
 import com.nico.rsshub.controllers.Controller;
-import com.nico.rsshub.modeles.Category;
-import com.nico.rsshub.modeles.Feed;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -111,7 +111,10 @@
                 android:inputType="textNoSuggestions"
                 android:ems="10"
                 android:id="@+id/feed_tags_editText"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginEnd="10dp" />
             <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="wrap_content"

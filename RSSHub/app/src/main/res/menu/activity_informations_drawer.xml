@@ -6,12 +6,17 @@
             android:id="@+id/nav_manage_feeds"
             android:icon="@drawable/ic_menu_manage"
             android:title="@string/manage_feeds" />
+
+
     </group>
+    <item
+        android:id="@+id/nav_home"
+        android:title="@string/home" />
 
-    <item android:title="Favoris">
-        <menu>
+    <!--<item android:title="Favoris">-->
+        <!--<menu>-->
 
-        </menu>
-    </item>
+        <!--</menu>-->
+    <!--</item>-->
 
 </menu>

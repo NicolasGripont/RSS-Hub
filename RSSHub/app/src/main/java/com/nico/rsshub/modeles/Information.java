@@ -1,8 +1,9 @@
 package com.nico.rsshub.modeles;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Information {
+public class Information implements Serializable {
 	private String title;
 	private String url;
 	private String description;

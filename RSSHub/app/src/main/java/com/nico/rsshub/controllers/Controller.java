@@ -3,9 +3,9 @@ package com.nico.rsshub.controllers;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.view.MenuItem;
 import android.widget.AdapterView;
 
-import com.nico.rsshub.modeles.Category;
 import com.nico.rsshub.modeles.Feed;
 import com.nico.rsshub.modeles.Information;
 import com.nico.rsshub.services.FeedManager;
@@ -486,5 +486,48 @@ public class Controller {
             tags.addAll(tmpTags);
         }
         return tags;
+    }
+
+    public void onNavigationFeedItemSelected(MenuItem item) {
+        if(this.currentActivity != null) {
+            if (this.currentActivity == this.informationActivity) {
+                for(Feed feed : feedsList) {
+                    if(item.toString().equals(feed.getSource() + " - " + feed.getTitle())) {
+                        this.informationActivity.updateInformations(this.feeds.get(feed),null);
+                        this.informationActivity.refreshListViews();
+                        this.informationActivity.setTitle(item.toString());
+                        return;
+                    }
+                }
+            }
+        }
+    }
+
+    public void onNavigationTagsItemSelected(MenuItem item) {
+        if(this.currentActivity != null) {
+            if (this.currentActivity == this.informationActivity) {
+                List<Information> informationList = new ArrayList<>();
+                List<Information> favorites = new ArrayList<>();
+                for(Feed feed : feedsList) {
+                    for(String tag : feed.getTags()) {
+                        if (item.toString().equals(tag)) {
+                            informationList.addAll(feeds.get(feed));
+                            if(feed.isFavorite()) {
+                                favorites.addAll(feeds.get(feed));
+                            }
+                            break;
+                        }
+                    }
+                }
+                if(favorites.size() == 0) {
+                    favorites = null;
+                }
+
+                this.informationActivity.updateInformations(informationList, favorites);
+                this.informationActivity.refreshListViews();
+                this.informationActivity.setTitle(item.toString());
+
+            }
+        }
     }
 }
