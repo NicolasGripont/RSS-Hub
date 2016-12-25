@@ -1,6 +1,7 @@
 package com.nico.rsshub.controllers;
 
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.view.MenuItem;
@@ -109,26 +110,26 @@ public class Controller {
     public void loadInformations(){
         LoadFeedsTask loadFeedsTask = new LoadFeedsTask();
 
-        final Feed feed1 = new Feed();
-        feed1.setUrl("http://www.lequipe.fr/rss/actu_rss.xml");
-        feed1.setSource("L'Equipe");
-        feed1.setTitle("A la une");
-        feed1.getTags().add("#sport");
-        feed1.setCacheFileName(createCacheFileName(feed1.getSource(),feed1.getTitle(),feed1.getUrl()));
-        feed1.setFavorite(true);
-
-        final Feed feed2 = new Feed();
-        feed2.setUrl("http://korben.info/feed");
-        feed2.setSource("Korben");
-        feed2.setTitle("A la une");
-        feed2.getTags().add("#informatique");
-        feed2.setCacheFileName(createCacheFileName(feed2.getSource(),feed2.getTitle(),feed2.getUrl()));
-
-        feedsList.add(feed1);
-        feedsList.add(feed2);
+//        final Feed feed1 = new Feed();
+//        feed1.setUrl("http://www.lequipe.fr/rss/actu_rss.xml");
+//        feed1.setSource("L'Equipe");
+//        feed1.setTitle("A la une");
+//        feed1.getTags().add("#sport");
+//        feed1.setCacheFileName(createCacheFileName(feed1.getSource(),feed1.getTitle(),feed1.getUrl()));
+//        feed1.setFavorite(true);
 //
+//        final Feed feed2 = new Feed();
+//        feed2.setUrl("http://korben.info/feed");
+//        feed2.setSource("Korben");
+//        feed2.setTitle("A la une");
+//        feed2.getTags().add("#informatique");
+//        feed2.setCacheFileName(createCacheFileName(feed2.getSource(),feed2.getTitle(),feed2.getUrl()));
+//
+//        feedsList.add(feed1);
+//        feedsList.add(feed2);
+
 //        FeedManager.writeFeeds(this.currentActivity.getApplicationContext(),feedsList);
-//        this.feedsList = FeedManager.readFeeds(this.currentActivity.getApplicationContext());
+        this.feedsList = FeedManager.readFeeds(this.currentActivity.getApplicationContext());
 
         Feed[] feeds = new Feed[feedsList.size()];
         for(int i = 0; i < feedsList.size(); i++) {
@@ -161,6 +162,7 @@ public class Controller {
       if(this.currentActivity == this.informationActivity && this.informationActivity != null) {
           this.informationActivity.updateInformations(this.informationList,this.favorites);
           this.informationActivity.refreshNavigationMenu(this.feedsList);
+          System.out.println("Memory Use : "+ (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) + " bytes");
       }
     }
 

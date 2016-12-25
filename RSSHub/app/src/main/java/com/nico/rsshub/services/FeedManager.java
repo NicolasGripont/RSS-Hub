@@ -23,6 +23,7 @@ public class FeedManager {
             JSONArray jsonFeeds = new JSONArray();
             for(Feed feed : feeds) {
                 JSONObject jsonFeed = new JSONObject();
+                jsonFeed.put("source",feed.getSource());
                 jsonFeed.put("title",feed.getTitle());
                 jsonFeed.put("url",feed.getUrl());
                 JSONArray jsonTags = new JSONArray();
@@ -52,16 +53,16 @@ public class FeedManager {
             is.close();
 
             JSONArray jsonArray = new JSONArray(new String(buffer, "UTF-8"));
-
             List<Feed> feeds = new ArrayList<>();
 
             for(int i = 0; i < jsonArray.length(); i++) {
                 Feed feed = new Feed();
                 JSONObject jsonObject = (JSONObject) jsonArray.get(i);
+                feed.setSource(jsonObject.getString("source"));
                 feed.setTitle(jsonObject.getString("title"));
                 feed.setUrl(jsonObject.getString("url"));
                 JSONArray jsonTags = jsonObject.getJSONArray("tags");
-                for(int j = 0; i < jsonTags.length(); i++) {
+                for(int j = 0; j < jsonTags.length(); j++) {
                     feed.getTags().add(jsonTags.getString(j));
                 }
                 feed.setFavorite(jsonObject.getBoolean("isFavorite"));

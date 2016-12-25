@@ -165,16 +165,20 @@ public class LoadFeedThread extends Thread {
                     information.setDatePublication(null);
                 }
 
-//                image
-                if(item.getChild("enclosure") != null && item.getChild("enclosure").getAttributeValue("type").contains("image")) {
-                    information.setImage(item.getChild("enclosure").getAttributeValue("url"));
-                    DownloadImageThread downloadImageThread = new DownloadImageThread(information);
-                    this.downloadImageThreads.add(downloadImageThread);
-                    downloadImageThread.start();
+                //image (on charge l'image seulement si date publication inférieur à un jour
+                if( information.getDatePublication() != null &&
+                        ((new Date()).getTime() - information.getDatePublication().getTime()) < 24*60*60*1000) {
+                    if (item.getChild("enclosure") != null && item.getChild("enclosure").getAttributeValue("type").contains("image")) {
+                        information.setImage(item.getChild("enclosure").getAttributeValue("url"));
+                        DownloadImageThread downloadImageThread = new DownloadImageThread(information);
+                        this.downloadImageThreads.add(downloadImageThread);
+                        downloadImageThread.start();
+                    } else {
+                        information.setImage(null);
+                    }
                 } else {
                     information.setImage(null);
                 }
-
                 //url
                 information.setUrl(item.getChild("link").getValue());
 
