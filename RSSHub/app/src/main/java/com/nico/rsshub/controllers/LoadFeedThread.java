@@ -36,11 +36,9 @@ import java.util.Map;
 
 public class LoadFeedThread extends Thread {
 
-    private static String cacheDirectory = Environment.getExternalStorageDirectory() + "/RSS Hub/cache/";
+    //TODO mettre en local
 
     private List<Information> informationList;
-
-    private Map<Information, Bitmap> images = null;
 
     private List<DownloadImageThread> downloadImageThreads;
 
@@ -58,14 +56,11 @@ public class LoadFeedThread extends Thread {
         this.refreshTimeInMs = refreshTimeInMs;
         this.informationList = new ArrayList<>();
         this.downloadImageThreads = new ArrayList<>();
-        this.images = new HashMap<>();
     }
 
     public List<Information> getInformationList() {
         return this.informationList;
     }
-
-    public Map<Information, Bitmap> getImages() { return images; }
 
     public Feed getFeed() { return feed; }
 
@@ -82,9 +77,6 @@ public class LoadFeedThread extends Thread {
         for(DownloadImageThread downloadImageThread : this.downloadImageThreads) {
             try {
                 downloadImageThread.join();
-                if(downloadImageThread.getBitmap() != null) {
-                    this.images.put(downloadImageThread.getInformation(), downloadImageThread.getBitmap());
-                }
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

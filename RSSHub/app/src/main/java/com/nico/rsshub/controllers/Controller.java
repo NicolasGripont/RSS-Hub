@@ -1,9 +1,7 @@
 package com.nico.rsshub.controllers;
 
 import android.app.Activity;
-import android.app.ActivityManager;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.view.MenuItem;
 import android.widget.AdapterView;
 
@@ -20,8 +18,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by Nico on 14/12/2016.
@@ -42,17 +42,17 @@ public class Controller {
     private List<Information> informationList = null;
     private List<Information> favorites = null;
     private Map<Feed,List<Information>> feeds = null;
-    private Map<Information, Bitmap> images = null;
     private List<Feed> feedsList = null;
+    private Set<String> images = null;
 
     private List<Feed> selectedFeeds = null;
     private boolean isManageFeedsMode = false;
 
     private Feed newFeed = null;
     private List<Information> newInformationList = null;
-    private Map<Information, Bitmap> newImages = null;
     private AddFeedTask addFeedTask = null;
 
+    private Information informationDetail = null;
 
     public static Controller getInstance() {
         if(instance == null) {
@@ -65,9 +65,9 @@ public class Controller {
         informationList = new ArrayList<>();
         favorites = new ArrayList<>();
         feeds = new HashMap<>();
-        images = new HashMap<>();
         feedsList = new ArrayList<>();
         selectedFeeds = new ArrayList<>();
+        images = new HashSet<>();
     }
 
     public List<Information> getInformationList() { return informationList; }
@@ -76,8 +76,6 @@ public class Controller {
 
     public Map<Feed, List<Information>> getFeeds() { return feeds; }
 
-    public Map<Information, Bitmap> getImages() { return images; }
-
     public Activity getCurrentActivity() {
         return currentActivity;
     }
@@ -85,6 +83,8 @@ public class Controller {
     public List<Feed> getFeedsList() { return feedsList; }
 
     public List<Feed> getSelectedFeeds() { return selectedFeeds; }
+
+    public Set<String> getImages() { return images; }
 
     public void setCurrentActivity(Activity activity) {
         if(activity.getClass().equals(SplashActivity.class)) {
@@ -109,43 +109,20 @@ public class Controller {
 
     public void loadInformations(){
         LoadFeedsTask loadFeedsTask = new LoadFeedsTask();
-
-//        final Feed feed1 = new Feed();
-//        feed1.setUrl("http://www.lequipe.fr/rss/actu_rss.xml");
-//        feed1.setSource("L'Equipe");
-//        feed1.setTitle("A la une");
-//        feed1.getTags().add("#sport");
-//        feed1.setCacheFileName(createCacheFileName(feed1.getSource(),feed1.getTitle(),feed1.getUrl()));
-//        feed1.setFavorite(true);
-//
-//        final Feed feed2 = new Feed();
-//        feed2.setUrl("http://korben.info/feed");
-//        feed2.setSource("Korben");
-//        feed2.setTitle("A la une");
-//        feed2.getTags().add("#informatique");
-//        feed2.setCacheFileName(createCacheFileName(feed2.getSource(),feed2.getTitle(),feed2.getUrl()));
-//
-//        feedsList.add(feed1);
-//        feedsList.add(feed2);
-
-//        FeedManager.writeFeeds(this.currentActivity.getApplicationContext(),feedsList);
         this.feedsList = FeedManager.readFeeds(this.currentActivity.getApplicationContext());
 
         Feed[] feeds = new Feed[feedsList.size()];
-        for(int i = 0; i < feedsList.size(); i++) {
-            feeds[i] = feedsList.get(i);
-        }
-
+            for (int i = 0; i < feedsList.size(); i++) {
+                feeds[i] = feedsList.get(i);
+            }
         loadFeedsTask.execute(feeds);
     }
 
     public void onInformationClick(AdapterView<?> adapter, int position) {
         if(this.currentActivity == this.informationActivity && this.informationActivity != null) {
-            Information information = (Information) adapter.getItemAtPosition(position);
+            this.informationDetail = (Information) adapter.getItemAtPosition(position);
             Intent intent = new Intent(this.informationActivity, InformationDetailActivity.class);
             this.informationActivity.startActivity(intent);
-            LoadInformationDetailTask loadInformationDetailTask = new LoadInformationDetailTask();
-            loadInformationDetailTask.execute(information.getUrl());
         }
     }
 
@@ -162,12 +139,16 @@ public class Controller {
       if(this.currentActivity == this.informationActivity && this.informationActivity != null) {
           this.informationActivity.updateInformations(this.informationList,this.favorites);
           this.informationActivity.refreshNavigationMenu(this.feedsList);
-          System.out.println("Memory Use : "+ (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) + " bytes");
       }
     }
 
+    public void testURL() {
+        TestUrlTask loadInformationDetailTask = new TestUrlTask();
+        loadInformationDetailTask.execute(this.informationDetail.getUrl());
+    }
+
     public void loadUrl(String url) {
-        if(this.currentActivity == this.informationDetailActivity && this.informationDetailActivity != null) {
+        if(this.informationDetailActivity != null) {
             this.informationDetailActivity.loadUrl(url);
         }
     }
@@ -217,6 +198,7 @@ public class Controller {
                 this.manageFeedsActivity.finish();
                 this.manageFeedsActivity = null;
                 this.updateFavorites();
+                this.informationActivity.updateInformations(informationList,favorites);
                 this.informationActivity.refreshListViews();
                 this.informationActivity.refreshNavigationMenu(this.feedsList);
             } else if(this.currentActivity == this.addFeedActivity) {
@@ -226,7 +208,6 @@ public class Controller {
                 this.manageFeedsActivity.refreshListViewFeeds();
                 this.newFeed = null;
                 this.newInformationList = null;
-                this.newImages = null;
                 this.addFeedTask = null;
             }
         }
@@ -345,7 +326,6 @@ public class Controller {
                         List<Information> informations = feeds.get(feed);
                         if(informations != null) {
                             for (Information information : informations) {
-                                images.remove(information);
                                 favorites.removeAll(informations);
                                 informationList.removeAll(informations);
                             }
@@ -420,18 +400,16 @@ public class Controller {
 
 
 
-    public void loadFeedTaskFinished(List<Information> informationList, Map<Information,Bitmap> images) {
+    public void loadFeedTaskFinished(List<Information> informationList) {
         if(this.currentActivity != null) {
             if (this.currentActivity == this.addFeedActivity) {
                 this.addFeedActivity.dismissLoadingDialog();
                 if(informationList.size() != 0) {
                     this.newInformationList = informationList;
-                    this.newImages = images;
                     this.addFeedActivity.showConfirmationAlertDialog();
                 } else {
                     this.newFeed = null;
                     this.newInformationList = null;
-                    this.newImages = null;
                     this.addFeedActivity.showErrorAlertDialog();
                 }
                 this.addFeedTask = null;
@@ -455,7 +433,6 @@ public class Controller {
                         return 1;
                     }
                 });
-                this.images.putAll(newImages);
                 this.feeds.put(newFeed,newInformationList);
                 FeedManager.writeFeeds(this.currentActivity.getApplicationContext(),feedsList);
             }
@@ -471,7 +448,6 @@ public class Controller {
                 this.addFeedTask = null;
                 this.newFeed = null;
                 this.newInformationList = null;
-                this.newImages = null;
             }
         }
     }

@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
 import com.nico.rsshub.modeles.Information;
+import com.nico.rsshub.services.FeedManager;
 
 import java.io.InputStream;
 
@@ -15,11 +16,9 @@ public class DownloadImageThread extends Thread {
 
     private Information information;
 
-    private Bitmap bitmap;
 
     public DownloadImageThread(Information information) {
         super();
-        this.bitmap = null;
         this.information = information;
     }
 
@@ -27,23 +26,21 @@ public class DownloadImageThread extends Thread {
         return information;
     }
 
-    public Bitmap getBitmap() {
-        return bitmap;
-    }
 
     @Override
     public void run() {
         super.run();
         Bitmap bitmap;
         try {
-            // Download Image from URL
-            InputStream input = new java.net.URL(this.information.getImage()).openStream();
-            // Decode Bitmap
-            bitmap = BitmapFactory.decodeStream(input);
+            if(!FeedManager.imageExists(Controller.getInstance().getCurrentActivity().getApplicationContext(),information)) {
+                // Download Image from URL
+                InputStream input = new java.net.URL(information.getImage()).openStream();
+                // Decode Bitmap
+                bitmap = BitmapFactory.decodeStream(input);
 
-            this.bitmap = bitmap;
+                FeedManager.saveBitmap(Controller.getInstance().getCurrentActivity().getApplicationContext(), bitmap, information);
+            }
         } catch (Exception e) {
-            bitmap = null;
         }
 
     }

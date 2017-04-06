@@ -38,12 +38,14 @@ public class InformationDetailActivity extends AppCompatActivity {
         Controller.getInstance().setCurrentActivity(this);
 
         this.webView = (WebView) findViewById(R.id.webView);
+        this.webView.getSettings().setJavaScriptEnabled(true);
 
         this.information = (Information) getIntent().getSerializableExtra("information");
 
         this.showLoading();
 
         Controller.getInstance().setCurrentActivity(this);
+        Controller.getInstance().testURL();
     }
 
     public void showLoading() {
@@ -54,7 +56,6 @@ public class InformationDetailActivity extends AppCompatActivity {
     public void loadUrl(String url) {
         this.webView.setWebViewClient(new WebViewClient());
         this.webView.loadUrl(url);
-        System.out.println(url);
     }
 
     @Override

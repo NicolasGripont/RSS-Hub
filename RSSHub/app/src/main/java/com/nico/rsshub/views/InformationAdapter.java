@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.nico.rsshub.R;
 import com.nico.rsshub.controllers.Controller;
 import com.nico.rsshub.modeles.Information;
+import com.nico.rsshub.services.FeedManager;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -72,22 +73,25 @@ public class InformationAdapter extends BaseAdapter {
         ImageView information_image = (ImageView)layoutItem.findViewById(R.id.information_image);
         LinearLayout LL_Fond = (LinearLayout)layoutItem.findViewById(R.id.LL_Fond);
 
-        //(3) : Renseignement des valeurs
-        information_feed_source.setText(informationList.get(position).getFeed().getSource());
-        information_feed_title.setText(informationList.get(position).getFeed().getTitle());
+        //(3) : Recupération de l'élément
+        Information information = informationList.get(position);
+
+        //(4) : Renseignement des valeurs
+        information_feed_source.setText(information.getFeed().getSource());
+        information_feed_title.setText(information.getFeed().getTitle());
         String tags = "";
-        for (String tag: informationList.get(position).getFeed().getTags()) {
+        for (String tag: information.getFeed().getTags()) {
             tags += tag + " ";
         }
         information_feed_tags.setText(tags);
-        information_title.setText(informationList.get(position).getTitle());
-        if(informationList.get(position).getDatePublication() != null) {
+        information_title.setText(information.getTitle());
+        if(information.getDatePublication() != null) {
             DateFormat dateFormat = new SimpleDateFormat("dd/MM HH:mm", Locale.ENGLISH);
-            information_date.setText(dateFormat.format(informationList.get(position).getDatePublication()));
+            information_date.setText(dateFormat.format(information.getDatePublication()));
         }
 
         if(this.withImage) {
-            Bitmap image = Controller.getInstance().getImages().get(this.informationList.get(position));
+            Bitmap image = FeedManager.loadImage(context,information);
             if(image != null)
                 information_image.setImageBitmap(image);
             else
@@ -96,7 +100,7 @@ public class InformationAdapter extends BaseAdapter {
             information_image.setImageDrawable(null);
         }
 
-        if(informationList.get(position).getFeed().isFavorite()) {
+        if(information.getFeed().isFavorite()) {
 //            LL_Fond.setBackgroundColor(ContextCompat.getColor(context, R.color.black));
 //            information_title.setTextColor(ContextCompat.getColor(context, R.color.white));
 //            information_feed.setBackgroundColor(ContextCompat.getColor(context, R.color.white));

@@ -329,23 +329,25 @@ public class InformationActivity extends AppCompatActivity
         this.tagsMenu.clear();
         this.feedsMenu.clear();
 
-        List<String> tags = new ArrayList<>();
-        for(Feed feed : feeds) {
-            if(feed.isFavorite()) {
-                this.favoritesMenu.add(feed.getSource() + " - " + feed.getTitle());
-            }
-            this.feedsMenu.add(feed.getSource() + " - " + feed.getTitle());
-            List<String> tmpTags = new ArrayList<>();
-            for(String tag : feed.getTags()) {
-                if (!tags.contains(tag)) {
-                    tmpTags.add(tag);
+        if(feeds != null) {
+            List<String> tags = new ArrayList<>();
+            for (Feed feed : feeds) {
+                if (feed.isFavorite()) {
+                    this.favoritesMenu.add(feed.getSource() + " - " + feed.getTitle());
                 }
+                this.feedsMenu.add(feed.getSource() + " - " + feed.getTitle());
+                List<String> tmpTags = new ArrayList<>();
+                for (String tag : feed.getTags()) {
+                    if (!tags.contains(tag)) {
+                        tmpTags.add(tag);
+                    }
+                }
+                tags.addAll(tmpTags);
             }
-            tags.addAll(tmpTags);
-        }
 
-        for(String tag : tags) {
-            this.tagsMenu.add(tag);
+            for (String tag : tags) {
+                this.tagsMenu.add(tag);
+            }
         }
     }
 

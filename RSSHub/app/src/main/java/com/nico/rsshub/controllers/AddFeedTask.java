@@ -18,11 +18,9 @@ public class AddFeedTask extends AsyncTask<Feed, Integer, String> {
 
     private LoadFeedThread loadFeedThread;
 
-    private List<Information> informationList;
 
     public AddFeedTask() {
         super();
-        this.informationList = new ArrayList<>();
     }
 
 
@@ -38,7 +36,7 @@ public class AddFeedTask extends AsyncTask<Feed, Integer, String> {
     }
 
     protected void onPostExecute(String result) {
-        Controller.getInstance().loadFeedTaskFinished(this.loadFeedThread.getInformationList(), this.loadFeedThread.getImages());
+        Controller.getInstance().loadFeedTaskFinished(this.loadFeedThread.getInformationList());
     }
 
 }

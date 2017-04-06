@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 
 import com.nico.rsshub.modeles.Feed;
 import com.nico.rsshub.modeles.Information;
+import com.nico.rsshub.services.FeedManager;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -38,12 +39,15 @@ public class LoadFeedsTask extends AsyncTask<Feed, Integer, String> {
 
     protected String doInBackground(Feed... feeds) {
 
-        for(Feed feed : feeds) {
-            try {
-                LoadFeedThread loadFeedThread = new LoadFeedThread(feed,0);
-                this.loadFeedThreads.add(loadFeedThread);
-                loadFeedThread.start();
-            } catch (Exception e) {
+        if(feeds != null)
+        {
+            for(Feed feed : feeds) {
+                try {
+                    LoadFeedThread loadFeedThread = new LoadFeedThread(feed,0);
+                    this.loadFeedThreads.add(loadFeedThread);
+                    loadFeedThread.start();
+                } catch (Exception e) {
+                }
             }
         }
 
@@ -51,13 +55,18 @@ public class LoadFeedsTask extends AsyncTask<Feed, Integer, String> {
     }
 
     protected void onPostExecute(String result) {
+
         for(LoadFeedThread loadFeedThread : this.loadFeedThreads) {
             try {
                 loadFeedThread.join();
                 if(loadFeedThread.getInformationList() != null && !loadFeedThread.getInformationList().isEmpty()) {
                     Controller.getInstance().getInformationList().addAll(loadFeedThread.getInformationList());
-                    Controller.getInstance().getImages().putAll(loadFeedThread.getImages());
                     Controller.getInstance().getFeeds().put(loadFeedThread.getFeed(),loadFeedThread.getInformationList());
+                    for(Information information : loadFeedThread.getInformationList()) {
+                        if(information.getImage() != null && !information.getImage().isEmpty()) {
+                            Controller.getInstance().getImages().add(Integer.toString(information.getImage().hashCode()));
+                        }
+                    }
                 }
             } catch (InterruptedException e) {
             }
@@ -76,11 +85,12 @@ public class LoadFeedsTask extends AsyncTask<Feed, Integer, String> {
         });
 
         Controller.getInstance().updateFavorites();
+        FeedManager.removeUnusedImages(Controller.getInstance().getCurrentActivity().getApplicationContext(),Controller.getInstance().getImages());
 
 
-        if(Controller.getInstance().getInformationList().size() != 0) {
+//        if(Controller.getInstance().getInformationList().size() != 0) {
             Controller.getInstance().showInformationActivity();
-        }
+//        }
     }
 
 }
